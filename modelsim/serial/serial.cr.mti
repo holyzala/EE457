@@ -1,0 +1,22 @@
+D:/workspace/EE457/modelsim/tutorial/tutorial.vhd {2 {vcom -work tutorial -2002 -explicit -stats=none D:/workspace/EE457/modelsim/tutorial/tutorial.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity serial
+-- Compiling architecture Behaviour of serial
+-- Compiling entity shift_reg
+-- Compiling architecture Behaviour of shift_reg
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Compiling entity FSM
+-- Compiling architecture Behaviour of FSM
+** Warning: D:/workspace/EE457/modelsim/tutorial/tutorial.vhd(149): (vcom-1937) Choice in CASE statement alternative must be locally static.
+** Warning: D:/workspace/EE457/modelsim/tutorial/tutorial.vhd(155): (vcom-1937) Choice in CASE statement alternative must be locally static.
+** Warning: D:/workspace/EE457/modelsim/tutorial/tutorial.vhd(161): (vcom-1937) Choice in CASE statement alternative must be locally static.
+** Warning: D:/workspace/EE457/modelsim/tutorial/tutorial.vhd(149): (vcom-1322) Case statement choice (generic "WAIT_STATE") cannot be checked for uniqueness.
+** Warning: D:/workspace/EE457/modelsim/tutorial/tutorial.vhd(155): (vcom-1322) Case statement choice (generic "WORK_STATE") cannot be checked for uniqueness.
+** Warning: D:/workspace/EE457/modelsim/tutorial/tutorial.vhd(161): (vcom-1322) Case statement choice (generic "END_STATE") cannot be checked for uniqueness.
+
+} {} {}}

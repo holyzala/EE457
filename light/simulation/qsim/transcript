@@ -1,0 +1,31 @@
+# do light.do
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 11:44:35 on Jan 24,2018
+# vcom -work work light.vho 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package altera_lnsim_components
+# -- Loading package VITAL_Timing
+# -- Loading package VITAL_Primitives
+# -- Loading package cyclonev_atom_pack
+# -- Loading package cyclonev_components
+# -- Compiling entity light
+# -- Compiling architecture structure of light
+# End time: 11:44:35 on Jan 24,2018, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 11:44:35 on Jan 24,2018
+# vcom -work work Waveform.vwf.vht 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity light_vhd_vec_tst
+# -- Compiling architecture light_arch of light_vhd_vec_tst
+# End time: 11:44:35 on Jan 24,2018, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# ** Error (suppressible): (vsim-SDF-3196) Failed to find SDF file "light_vhd.sdo".
+# vsim -novopt -c -t 1ps -sdfmax light_vhd_vec_tst/i1=light_vhd.sdo -L cyclonev -L altera -L altera_mf -L 220model -L sgate -L altera_lnsim work.light_vhd_vec_tst 
+# Error loading design
+# Errors: 1, Warnings: 0
