@@ -47,9 +47,15 @@ architecture struct of DE1_top is
 			max  : positive  -- what is the max value of the counter ( modulus )
 			);
 
-		PORT (clk : IN std_logic;
-				aclr_n : in std_logic;
-				count_out : out unsigned (1 downto 0));
+		PORT (
+			clk	 :in  std_logic; -- system clock
+			data	 :in  std_logic_vector( wide-1 downto 0 ); -- data in for parallel load, use unsigned(data) to cast to unsigned
+			load	 :in  std_logic; -- signal to load data into i_count i_count <= unsigned(data);
+			enable :in  std_logic; -- clock enable
+			reset	 :in  std_logic; -- reset to zeros use i_count <= (others => '0' ) since size depends on generic
+			count	 :out std_logic_vector( wide-1 downto 0 ); -- count out
+			term	 :out std_logic -- maximum count is reached
+		);
 	END component gen_counter;
 	
 	component snake_segment_cntrl IS
@@ -60,7 +66,7 @@ architecture struct of DE1_top is
 	component snake_controller
 		PORT (
 			-- Declare control inputs 
-			clk, key1, sw1, sw2, sw3, sw4, sw10 : IN STD_LOGIC;
+			clk, key1, sw1, sw2, sw3, sw4, sw10, count_reset : IN STD_LOGIC;
 
 			-- for time changes; everysecond the snake moves
 			second : IN std_logic;
@@ -81,9 +87,11 @@ begin
 	u1: gen_counter 
 		generic map (wide => 26, max => 50000000);
 		PORT MAP (
-			clk => clk, 
+			clk => clock_50, 
 			aclr_n => start_n, 
-			count_out => count(25 downto 0)
+			count_out => count(25 downto 0),
+			reset => count_reset,
+			enable => '1'
 			);
 	u2: snake_segment_cntrl PORT MAP (
 						input => state_out(15 downto 0),
@@ -113,7 +121,7 @@ begin
 		clk => clock_50, 
 		reset_a => KEY, 
 		start => start,
-		count => count(1 downto 0),
+		count => term,
 		input_sel => sel(1 downto 0),
 		shift_sel => shift(1 downto 0),
 		state_out => state_out(2 downto 0),

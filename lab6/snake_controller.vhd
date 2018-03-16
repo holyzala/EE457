@@ -12,6 +12,7 @@ ENTITY snake_control IS
 		second : IN std_logic;
 		count : in unsigned (25 downto 0);
 		state_out : out unsigned (15 downto 0);
+		count_reset : out std_logic;
 
 		-- Declare output control signals  AKA the segments for the seven seg display(6 of these)
 	);
@@ -176,6 +177,7 @@ BEGIN
 				END IF;
 
 		END CASE;
+		count_reset <= '1';
 	-- End process
 	END PROCESS;
 
