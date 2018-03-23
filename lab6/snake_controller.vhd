@@ -43,123 +43,121 @@ END ENTITY snake_controller;
 		
 		-- remove clk and use count instead??
 		
-		PROCESS (clk, reset_a)
+		PROCESS (count, reset_a)
 		begin 
 			if reset_a = '0' then
 				head_state <= s1;
-			elsif rising_Edge(clk) then
+			elsif count = '1' then
 				head_state <= next_state;
+			else
+				head_state <= s1;
 			end if;
 		END PROCESS;
 
 	-- Figure out the next state for the head based on if they have been swapped
 	-- and if the second has passed.
-	PROCESS (head_state, count, sw10)
+	PROCESS (head_state, sw10)
 	BEGIN
-		IF count = '1' THEN
-			CASE head_state IS
-				WHEN s0 =>
-					IF sw10 = '1' THEN
-						next_state <= s15;
-					ELSE
-						next_state <= s1;
-					END IF;
-				WHEN s1=>
-					IF sw10 = '1' THEN
-						next_state <= s0;
-					ELSE
-						next_state <= s2;
-					END IF;
-				WHEN s2=>
-					IF sw10 = '1' THEN
-						next_state <= s1;
-					ELSE
-						next_state <= s3;
-					END IF;
-				WHEN s3=>
-					IF sw10 = '1' THEN
-						next_state <= s2;
-					ELSE
-						next_state <= s4;
-					END IF;
-				WHEN s4=>
-					IF sw10 = '1' THEN
-						next_state <= s3;
-					ELSE
-						next_state <= s5;
-					END IF;
-				WHEN s5=>
-					IF sw10 = '1' THEN
-						next_state <= s4;
-					ELSE
-						next_state <= s6;
-					END IF;
-				WHEN s6=>
-					IF sw10 = '1' THEN
-						next_state <= s5;
-					ELSE
-						next_state <= s7;
-					END IF;
-				WHEN s7=>
-					IF sw10 = '1' THEN
-						next_state <= s6;
-					ELSE
-						next_state <= s8;
-					END IF;
-				WHEN s8=>
-					IF sw10 = '1' THEN
-						next_state <= s7;
-					ELSE
-						next_state <= s9;
-					END IF;
-				WHEN s9=>
-					IF sw10 = '1' THEN
-						next_state <= s8;
-					ELSE
-						next_state <= s10;
-					END IF;
-				WHEN s10=>
-					IF sw10 = '1' THEN
-						next_state <= s9;
-					ELSE
-						next_state <= s11;
-					END IF;
-				WHEN s11=>
-					IF sw10 = '1' THEN
-						next_state <= s10;
-					ELSE
-						next_state <= s12;
-					END IF;
-				WHEN s12=>
-					IF sw10 = '1' THEN
-						next_state <= s11;
-					ELSE
-						next_state <= s13;
-					END IF;
-				WHEN s13=>
-					IF sw10 = '1' THEN
-						next_state <= s12;
-					ELSE
-						next_state <= s14;
-					END IF;
-				WHEN s14=>
-					IF sw10 = '1' THEN
-						next_state <= s13;
-					ELSE
-						next_state <= s15;
-					END IF;
-				WHEN s15=>
-					IF sw10 = '1' THEN
-						next_state <= s14;
-					ELSE
-						next_state <= s0;
-					END IF;
-				WHEN others =>
+		CASE head_state IS
+			WHEN s0 =>
+				IF sw10 = '1' THEN
+					next_state <= s15;
+				ELSE
+					next_state <= s1;
+				END IF;
+			WHEN s1=>
+				IF sw10 = '1' THEN
 					next_state <= s0;
-			END CASE;
-		ELSE
-			next_state <= head_state;
-		END IF;
+				ELSE
+					next_state <= s2;
+				END IF;
+			WHEN s2=>
+				IF sw10 = '1' THEN
+					next_state <= s1;
+				ELSE
+					next_state <= s3;
+				END IF;
+			WHEN s3=>
+				IF sw10 = '1' THEN
+					next_state <= s2;
+				ELSE
+					next_state <= s4;
+				END IF;
+			WHEN s4=>
+				IF sw10 = '1' THEN
+					next_state <= s3;
+				ELSE
+					next_state <= s5;
+				END IF;
+			WHEN s5=>
+				IF sw10 = '1' THEN
+					next_state <= s4;
+				ELSE
+					next_state <= s6;
+				END IF;
+			WHEN s6=>
+				IF sw10 = '1' THEN
+					next_state <= s5;
+				ELSE
+					next_state <= s7;
+				END IF;
+			WHEN s7=>
+				IF sw10 = '1' THEN
+					next_state <= s6;
+				ELSE
+					next_state <= s8;
+				END IF;
+			WHEN s8=>
+				IF sw10 = '1' THEN
+					next_state <= s7;
+				ELSE
+					next_state <= s9;
+				END IF;
+			WHEN s9=>
+				IF sw10 = '1' THEN
+					next_state <= s8;
+				ELSE
+					next_state <= s10;
+				END IF;
+			WHEN s10=>
+				IF sw10 = '1' THEN
+					next_state <= s9;
+				ELSE
+					next_state <= s11;
+				END IF;
+			WHEN s11=>
+				IF sw10 = '1' THEN
+					next_state <= s10;
+				ELSE
+					next_state <= s12;
+				END IF;
+			WHEN s12=>
+				IF sw10 = '1' THEN
+					next_state <= s11;
+				ELSE
+					next_state <= s13;
+				END IF;
+			WHEN s13=>
+				IF sw10 = '1' THEN
+					next_state <= s12;
+				ELSE
+					next_state <= s14;
+				END IF;
+			WHEN s14=>
+				IF sw10 = '1' THEN
+					next_state <= s13;
+				ELSE
+					next_state <= s15;
+				END IF;
+			WHEN s15=>
+				IF sw10 = '1' THEN
+					next_state <= s14;
+				ELSE
+					next_state <= s0;
+				END IF;
+			WHEN others =>
+				next_state <= s0;
+		END CASE;
 		--count_reset <= '1';
 	-- End process
 	END PROCESS;

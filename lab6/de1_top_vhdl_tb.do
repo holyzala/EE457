@@ -18,6 +18,7 @@
 
 vlib work
 vcom snake_segment_cntrl.vhd
+vcom snake_controller.vhd
 vcom counter.vhd 
 vcom de1_top.vhd 
 # Add any additional files here 
