@@ -101,19 +101,19 @@ architecture struct of DE1_top is
 	
 	signal state_out_before_seg: unsigned(15 downto 0);
 	signal secondPassed : std_logic;
-	
+	signal key0_n : std_logic;
 BEGIN
-
+	key0_n <= not KEY(0);
 -- processes, component instantiations, general logic.
 	u1: gen_counter 
-		generic map (wide => 26, max => 1000)
+		generic map (wide => 26, max => 10)
 		PORT MAP (
 			clk => clock_50,
 			load => '0',
 			data => (others => '0'),
 			--aclr_n => start_n, 
 			--count_out => count(25 downto 0),
-			reset => KEY(0),
+			reset => key0_n,
 			enable => '1',
 			term => secondPassed
 			);
