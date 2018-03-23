@@ -4,45 +4,42 @@ USE ieee.numeric_std.all;
 
 
 entity DE1_top is
+	Port(
 
-Port(
+		-- 50Mhz clock, i.e. 50 Million rising edges per second
+		clock_50 :in  std_logic; 
+		-- 7 Segment Display
+		-- driving the the individual bit loicall low will
+		-- light up the segment.
+		HEX0		:out	std_logic_vector( 6 downto 0); -- right most
+		HEX1		:out	std_logic_vector( 6 downto 0);	
+		HEX2		:out	std_logic_vector( 6 downto 0);	
+		HEX3		:out	std_logic_vector( 6 downto 0);	
+		HEX4		:out	std_logic_vector( 6 downto 0);	
+		HEX5		:out	std_logic_vector( 6 downto 0); -- left most
+		
+		-- Red LEDs above Slider switches
+		-- driving the LEDR signal logically high will light up the Red LED
+		-- driving the LEDR signal logicall low will turn off the Red LED 
+		LEDR		:out	std_logic_vector( 9 downto 0);	
 
-	-- 50Mhz clock, i.e. 50 Million rising edges per second
-   clock_50 :in  std_logic; 
-   -- 7 Segment Display
-	-- driving the the individual bit loicall low will
-	-- light up the segment.
-	HEX0		:out	std_logic_vector( 6 downto 0); -- right most
-	HEX1		:out	std_logic_vector( 6 downto 0);	
-	HEX2		:out	std_logic_vector( 6 downto 0);	
-	HEX3		:out	std_logic_vector( 6 downto 0);	
-	HEX4		:out	std_logic_vector( 6 downto 0);	
-	HEX5		:out	std_logic_vector( 6 downto 0); -- left most
-   
-	-- Red LEDs above Slider switches
-	-- driving the LEDR signal logically high will light up the Red LED
-	-- driving the LEDR signal logicall low will turn off the Red LED 
-   LEDR		:out	std_logic_vector( 9 downto 0);	
-
-	-- Push Button
-	-- the KEY input is normally high, pressing the KEY
-	-- will drive the input low.
-	
-	KEY		:in   std_logic_vector( 3 downto 0);  
-   -- Slider Switch
-	-- when the Slider switch is pushed up, away from the board edge
-	-- the input signal is logically high, when pushed towards the
-	-- board edge, the signal is loically low.
-	SW			:in	std_logic_vector( 9 downto 0 ) 
-    
-);
-
+		-- Push Button
+		-- the KEY input is normally high, pressing the KEY
+		-- will drive the input low.
+		
+		KEY		:in   std_logic_vector( 3 downto 0);  
+		-- Slider Switch
+		-- when the Slider switch is pushed up, away from the board edge
+		-- the input signal is logically high, when pushed towards the
+		-- board edge, the signal is loically low.
+		SW			:in	std_logic_vector( 9 downto 0 )
+	);
 end entity DE1_top;
 
 architecture struct of DE1_top is
 
 	COMPONENT gen_counter
-		
+
 		generic (
 			wide : positive; -- how many bits is the counter
 			max  : positive  -- what is the max value of the counter ( modulus )
@@ -58,47 +55,42 @@ architecture struct of DE1_top is
 			term	 :out std_logic -- maximum count is reached
 		);
 	END COMPONENT gen_counter;
-	
+
 	COMPONENT snake_segment_cntrl IS
-	
+
 		PORT (
 			input : IN unsigned (15 downto 0);
 			mask : IN unsigned(15 downto 0);
 			output : OUT std_logic_vector( 6 downto 0)
 			);
-			
+
 	END COMPONENT snake_segment_cntrl;
 
 	COMPONENT snake_controller
-		
+
 		PORT (
 			-- Declare control inputs 
 			reset_a, clk, sw1, sw2, sw3, sw4, sw10 : IN STD_LOGIC;
-			
+
 			--count_reset : IN STD_LOGIC;
 			-- for time changes; everysecond the snake moves
 			--second : IN std_logic;
-			
+
 			count: in std_logic;
-			
-			
+
 			--count : in unsigned (25 downto 0);
-			
-			
+
 			state_out : out unsigned (15 downto 0)
 			--done, clk_ena, sclr_n : OUT STD_LOGIC
 		);
-		
 	END COMPONENT snake_controller;
-
 
 -- signal and component declartions
 -- you will need to create the component declaration for the 7 segment control.
 	--signal count: unsigned (25 downto 0);
-	
-	
+
 	-- DECLARE ALL COMPONENT OUTPUTS HERE!!!!!
-	
+
 	signal state_out_before_seg: unsigned(15 downto 0);
 	signal secondPassed : std_logic;
 	signal key0_n : std_logic;
@@ -170,14 +162,5 @@ BEGIN
 		--done => done_flag,
 		--clk_ena => clk_ena,
 		--sclr_n => sclr_n
-		);
-				
+		);				
 end;
-
-
-
-
-
-
-
-

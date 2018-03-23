@@ -11,48 +11,40 @@ ENTITY snake_controller IS
 
 		-- count signal if the counter has reached 50 mil
 		count : in std_logic;
-		
-		
+
 		--count : in unsigned (25 downto 0);
-		
 		
 		-- Values of what the 6 segments should display
 		state_out : out unsigned (15 downto 0)
-		
-		
+
 		--count_reset : out std_logic
-
 	);
-	
-	
 END ENTITY snake_controller;
-	--  Begin architecture 
-	
-	ARCHITECTURE logic OF snake_controller IS
-		TYPE state_type IS (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15);
+--  Begin architecture 
 
-		-- Declare two signals named "head_state" and "next_state" to be of enumerated type
-		SIGNAL head_state: state_type;
-		SIGNAL next_state: state_type;
-		signal size: unsigned (15 downto 0);
-		signal shift_count: integer;
-		
-	BEGIN
-		--  rising edge transitions; Use asynchronous clear control
-		-- set the next state aka move the snake around the clock.
-		
-		-- remove clk and use count instead??
-		
-		PROCESS (count, reset_a)
-		begin 
-			if reset_a = '1' then
-				head_state <= s1;
-			elsif count = '1' then
+ARCHITECTURE logic OF snake_controller IS
+	TYPE state_type IS (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15);
+
+	-- Declare two signals named "head_state" and "next_state" to be of enumerated type
+	SIGNAL head_state: state_type;
+	SIGNAL next_state: state_type;
+	signal size: unsigned (15 downto 0);
+	signal shift_count: integer;
+	
+BEGIN
+	--  rising edge transitions; Use asynchronous clear control
+	-- set the next state aka move the snake around the clock.
+	-- remove clk and use count instead??
+	PROCESS (clk, reset_a)
+	begin 
+		if reset_a = '1' then
+			head_state <= s1;
+		elsif rising_edge(clk) then
+			if count = '1' then
 				head_state <= next_state;
-			else
-				head_state <= s1;
 			end if;
-		END PROCESS;
+		end if;
+	END PROCESS;
 
 	-- Figure out the next state for the head based on if they have been swapped
 	-- and if the second has passed.
@@ -242,11 +234,11 @@ END ENTITY snake_controller;
 		END CASE;
 		-- End process
 	END PROCESS moore;
-		
+
 	process (size, shift_count)
 	begin
 		state_out <= size rol shift_count;
 	end process;
-		
+
 -- End architecture
 END ARCHITECTURE logic;
