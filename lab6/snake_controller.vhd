@@ -45,7 +45,7 @@ END ENTITY snake_controller;
 		
 		PROCESS (count, reset_a)
 		begin 
-			if reset_a = '0' then
+			if reset_a = '1' then
 				head_state <= s1;
 			elsif count = '1' then
 				head_state <= next_state;

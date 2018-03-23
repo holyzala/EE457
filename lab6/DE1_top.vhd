@@ -161,7 +161,7 @@ BEGIN
 		sw4 => SW(3),	-- or 6
 		sw10 => SW(9),	-- or 0
 		clk => clock_50, 
-		reset_a => KEY(0), -- or 3
+		reset_a => key0_n, -- or 3
 		--start => start,
 		count => secondPassed,
 		--input_sel => sel(1 downto 0),
