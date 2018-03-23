@@ -63,6 +63,7 @@ architecture struct of DE1_top is
 	
 		PORT (
 			input : IN unsigned (15 downto 0);
+			mask : IN unsigned(15 downto 0);
 			output : OUT std_logic_vector( 6 downto 0)
 			);
 			
@@ -98,7 +99,6 @@ architecture struct of DE1_top is
 	
 	-- DECLARE ALL COMPONENT OUTPUTS HERE!!!!!
 	
-	
 	signal state_out_before_seg: unsigned(15 downto 0);
 	signal secondPassed : std_logic;
 	
@@ -117,37 +117,43 @@ BEGIN
 			enable => '1',
 			term => secondPassed
 			);
-			
+
 	u2: snake_segment_cntrl PORT MAP (
-						input => state_out_before_seg(15 downto 0),
-						output => HEX0( 6 downto 0) 
-						);
-						
+		input => state_out_before_seg(15 downto 0),
+		mask => "1000000000000111",
+		output => HEX0( 6 downto 0) 
+	);
+
 	u3: snake_segment_cntrl PORT MAP (
-						input => state_out_before_seg(15 downto 0),
-						output => HEX1 ( 6 downto 0)
-						);
-						
+		input => state_out_before_seg(15 downto 0),
+		mask => "0100000000001000",
+		output => HEX1 ( 6 downto 0)
+	);
+
 	u4: snake_segment_cntrl PORT MAP (
-						input => state_out_before_seg(15 downto 0),
-						output => HEX2 ( 6 downto 0)
-						);
-						
+		input => state_out_before_seg(15 downto 0),
+		mask => "0010000000010000",
+		output => HEX2 ( 6 downto 0)
+	);
+
 	u5: snake_segment_cntrl PORT MAP (
-						input => state_out_before_seg(15 downto 0),
-						output => HEX3 ( 6 downto 0)
-						);
-						
+		input => state_out_before_seg(15 downto 0),
+		mask => "0001000000100000",
+		output => HEX3 ( 6 downto 0)
+	);
+
 	u6: snake_segment_cntrl PORT MAP (
-						input => state_out_before_seg(15 downto 0),
-						output => HEX4 ( 6 downto 0)
-						);
-						
+		input => state_out_before_seg(15 downto 0),
+		mask => "0000100001000000",
+		output => HEX4 ( 6 downto 0)
+	);
+
 	u7: snake_segment_cntrl PORT MAP (
-						input => state_out_before_seg(15 downto 0),
-						output => HEX5 ( 6 downto 0)
-						);
-						
+		input => state_out_before_seg(15 downto 0),
+		mask => "0000011110000000",
+		output => HEX5 ( 6 downto 0)
+	);
+
 	u8: snake_controller PORT MAP (
 		sw1 => SW(0),	-- or 9
 		sw2 => SW(1),	-- or 8
