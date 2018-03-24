@@ -11,22 +11,22 @@ END Entity snake_segment_cntrl;
 ARCHITECTURE LogicFunction OF snake_segment_cntrl IS
 
 BEGIN
-	process (input) IS
+	process (input, mask) IS
 		variable masked: unsigned(15 downto 0);
 	begin
 		masked := input and mask;
-		IF masked(0) = '1' OR masked(15) = '1' OR masked(14) = '1' OR masked(13) = '1' THEN
-			output <= input(0) & "00" & input(13) & input(14) & input(15) & '0';
-		ELSIF masked(1) = '1' OR masked(12) = '1' THEN
-			output <= input(1) & "00" & input(12) & "000";
-		ELSIF masked(2) = '1' OR masked(11) = '1' THEN
-			output <= input(2) & "00" & input(11) & "000";
-		ELSIF masked(3) = '1' OR masked(10) = '1' THEN
-			output <= input(3) & "00" & input(10) & "000";
-		ELSIF masked(4) = '1' OR masked(9) = '1' THEN
-			output <= input(4) & "00" & input(9) & "000";
-		ELSIF masked(5) = '1' OR masked(6) = '1' OR masked(7) = '1' or masked(8) = '1' THEN
-			output <= input(5) & input(6) & input(7) & input(8) & "000";
+		IF masked(15) = '1' OR masked(0) = '1' OR masked(1) = '1' OR masked(2) = '1' THEN
+			output <= input(15) & "00" & input(2) & input(1) & input(0) & '0';
+		ELSIF masked(14) = '1' OR masked(3) = '1' THEN
+			output <= input(14) & "00" & input(3) & "000";
+		ELSIF masked(13) = '1' OR masked(4) = '1' THEN
+			output <= input(13) & "00" & input(4) & "000";
+		ELSIF masked(12) = '1' OR masked(5) = '1' THEN
+			output <= input(12) & "00" & input(5) & "000";
+		ELSIF masked(11) = '1' OR masked(6) = '1' THEN
+			output <= input(11) & "00" & input(6) & "000";
+		ELSIF masked(10) = '1' OR masked(9) = '1' OR masked(8) = '1' or masked(7) = '1' THEN
+			output <= input(10) & input(9) & input(8) & input(7) & "000";
 		ELSE
 			output <= "0000000";
 		END IF;
