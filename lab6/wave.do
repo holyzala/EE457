@@ -22,8 +22,8 @@ add wave -noupdate /de1_top_tb/dut/sw(3)
 add wave -noupdate /de1_top_tb/dut/sw(9)
 
 add wave -noupdate -divider {Snake Control}
-add wave -noupdate /de1_top_tb/dut/u8/next_state
 add wave -noupdate /de1_top_tb/dut/u8/head_state
+add wave -noupdate /de1_top_tb/dut/u8/next_state
 add wave -noupdate /de1_top_tb/dut/u8/count
 add wave -noupdate /de1_top_tb/dut/u8/state_out
 

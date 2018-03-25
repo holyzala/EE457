@@ -37,9 +37,8 @@ entity DE1_top is
 end entity DE1_top;
 
 architecture struct of DE1_top is
-
+	-- Counter for determining 1 second intervals
 	COMPONENT gen_counter
-
 		generic (
 			wide : positive; -- how many bits is the counter
 			max  : positive  -- what is the max value of the counter ( modulus )
@@ -56,111 +55,102 @@ architecture struct of DE1_top is
 		);
 	END COMPONENT gen_counter;
 
+	-- 7 segment display controller with mask to determine the bits of state to look at
 	COMPONENT snake_segment_cntrl IS
-
 		PORT (
+			-- State input
 			input : IN unsigned (15 downto 0);
+			-- Mask to limit the state bits to look at
 			mask : IN unsigned(15 downto 0);
+			-- HEX? output
 			output : OUT std_logic_vector( 6 downto 0)
-			);
-
+		);
 	END COMPONENT snake_segment_cntrl;
 
+	-- Main controller for state logic
 	COMPONENT snake_controller
-
 		PORT (
-			-- Declare control inputs 
 			reset_a, clk, sw1, sw2, sw3, sw4, sw10 : IN STD_LOGIC;
-
-			--count_reset : IN STD_LOGIC;
-			-- for time changes; everysecond the snake moves
-			--second : IN std_logic;
-
 			count: in std_logic;
-
-			--count : in unsigned (25 downto 0);
-
 			state_out : out unsigned (15 downto 0)
-			--done, clk_ena, sclr_n : OUT STD_LOGIC
 		);
 	END COMPONENT snake_controller;
 
--- signal and component declartions
--- you will need to create the component declaration for the 7 segment control.
-	--signal count: unsigned (25 downto 0);
-
-	-- DECLARE ALL COMPONENT OUTPUTS HERE!!!!!
-
+	-- The combined state out (head_state + size bits) that gets masked into each segment
 	signal state_out_before_seg: unsigned(15 downto 0);
+	-- Counter determined a second has passed
 	signal secondPassed : std_logic;
+	-- Reset key notted
 	signal key0_n : std_logic;
 BEGIN
+	-- Set the notted reset signal
 	key0_n <= not KEY(0);
--- processes, component instantiations, general logic.
-	u1: gen_counter 
+	
+	-- The counter for second passing
+	u1: gen_counter
+		-- 26 bits wide and 50,000,000 max for 1 second
 		generic map (wide => 26, max => 10)
 		PORT MAP (
 			clk => clock_50,
+			-- We never load it
 			load => '0',
 			data => (others => '0'),
-			--aclr_n => start_n, 
-			--count_out => count(25 downto 0),
+			-- reset is key0 notted
 			reset => key0_n,
+			-- Always enabled
 			enable => '1',
+			-- Once term (max) is hit we have a second
 			term => secondPassed
-			);
+		);
 
+	-- left most display
 	u2: snake_segment_cntrl PORT MAP (
 		input => state_out_before_seg(15 downto 0),
 		mask => "1000000000000111",
-		output => HEX0( 6 downto 0) 
+		output => HEX5(6 downto 0) 
 	);
 
 	u3: snake_segment_cntrl PORT MAP (
 		input => state_out_before_seg(15 downto 0),
 		mask => "0100000000001000",
-		output => HEX1 ( 6 downto 0)
+		output => HEX4 (6 downto 0)
 	);
 
 	u4: snake_segment_cntrl PORT MAP (
 		input => state_out_before_seg(15 downto 0),
 		mask => "0010000000010000",
-		output => HEX2 ( 6 downto 0)
+		output => HEX3 (6 downto 0)
 	);
 
 	u5: snake_segment_cntrl PORT MAP (
 		input => state_out_before_seg(15 downto 0),
 		mask => "0001000000100000",
-		output => HEX3 ( 6 downto 0)
+		output => HEX2 (6 downto 0)
 	);
 
 	u6: snake_segment_cntrl PORT MAP (
 		input => state_out_before_seg(15 downto 0),
 		mask => "0000100001000000",
-		output => HEX4 ( 6 downto 0)
+		output => HEX1 (6 downto 0)
 	);
 
+	-- Right most display
 	u7: snake_segment_cntrl PORT MAP (
 		input => state_out_before_seg(15 downto 0),
 		mask => "0000011110000000",
-		output => HEX5 ( 6 downto 0)
+		output => HEX0 (6 downto 0)
 	);
 
+	-- The main controller
 	u8: snake_controller PORT MAP (
-		sw1 => SW(0),	-- or 9
-		sw2 => SW(1),	-- or 8
-		sw3 => SW(2),	-- or 7
-		sw4 => SW(3),	-- or 6
-		sw10 => SW(9),	-- or 0
+		sw1 => SW(0),
+		sw2 => SW(1),
+		sw3 => SW(2),
+		sw4 => SW(3),
+		sw10 => SW(9),
 		clk => clock_50, 
-		reset_a => key0_n, -- or 3
-		--start => start,
+		reset_a => key0_n,
 		count => secondPassed,
-		--input_sel => sel(1 downto 0),
-		--shift_sel => shift(1 downto 0),
-		state_out => state_out_before_seg--(2 downto 0)
-		--done => done_flag,
-		--clk_ena => clk_ena,
-		--sclr_n => sclr_n
-		);				
+		state_out => state_out_before_seg
+	);				
 end;

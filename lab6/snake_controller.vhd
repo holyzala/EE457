@@ -8,33 +8,26 @@ ENTITY snake_controller IS
 		-- Declare control inputs 
 		clk, reset_a : IN STD_LOGIC; -- system clock, custom reset signal(KEY1 Press)
 		sw1, sw2, sw3, sw4, sw10 : IN STD_LOGIC; --Switch values from the switches vector
-
-		-- count signal if the counter has reached 50 mil
-		count : in std_logic;
-
-		--count : in unsigned (25 downto 0);
-		
-		-- Values of what the 6 segments should display
-		state_out : out unsigned (15 downto 0)
-
-		--count_reset : out std_logic
+		count : in std_logic; -- 1 if we've reached a second interval
+		state_out : out unsigned (15 downto 0) -- This is combined state out (state + size)
 	);
 END ENTITY snake_controller;
---  Begin architecture 
 
+--  Begin architecture 
 ARCHITECTURE logic OF snake_controller IS
 	TYPE state_type IS (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15);
 
 	-- Declare two signals named "head_state" and "next_state" to be of enumerated type
 	SIGNAL head_state: state_type;
 	SIGNAL next_state: state_type;
+	-- size stores the amount of lights to light up, the size of the snake
 	signal size: unsigned (15 downto 0);
+	-- shift_count is how many times to rotate size left to get all the 1s in the right places
 	signal shift_count: integer;
 	
 BEGIN
-	--  rising edge transitions; Use asynchronous clear control
+	-- rising edge transitions; Use asynchronous clear control
 	-- set the next state aka move the snake around the clock.
-	-- remove clk and use count instead??
 	PROCESS (clk, reset_a)
 	begin 
 		if reset_a = '1' then
@@ -47,157 +40,131 @@ BEGIN
 	END PROCESS;
 
 	-- Figure out the next state for the head based on if they have been swapped
-	-- and if the second has passed.
 	PROCESS (head_state, sw10)
 	BEGIN
-		CASE head_state IS
-			WHEN s0 =>
-				IF sw10 = '1' THEN
-					next_state <= s15;
-				ELSE
+		IF sw10 = '0' then -- Going clockwise
+			CASE head_state IS
+				WHEN s0 =>
 					next_state <= s1;
-				END IF;
-			WHEN s1=>
-				IF sw10 = '1' THEN
-					next_state <= s0;
-				ELSE
+				WHEN s1=>
 					next_state <= s2;
-				END IF;
-			WHEN s2=>
-				IF sw10 = '1' THEN
-					next_state <= s1;
-				ELSE
+				WHEN s2=>
 					next_state <= s3;
-				END IF;
-			WHEN s3=>
-				IF sw10 = '1' THEN
-					next_state <= s2;
-				ELSE
+				WHEN s3=>
 					next_state <= s4;
-				END IF;
-			WHEN s4=>
-				IF sw10 = '1' THEN
-					next_state <= s3;
-				ELSE
+				WHEN s4=>
 					next_state <= s5;
-				END IF;
-			WHEN s5=>
-				IF sw10 = '1' THEN
-					next_state <= s4;
-				ELSE
+				WHEN s5=>
 					next_state <= s6;
-				END IF;
-			WHEN s6=>
-				IF sw10 = '1' THEN
-					next_state <= s5;
-				ELSE
+				WHEN s6=>
 					next_state <= s7;
-				END IF;
-			WHEN s7=>
-				IF sw10 = '1' THEN
-					next_state <= s6;
-				ELSE
+				WHEN s7=>
 					next_state <= s8;
-				END IF;
-			WHEN s8=>
-				IF sw10 = '1' THEN
-					next_state <= s7;
-				ELSE
+				WHEN s8=>
 					next_state <= s9;
-				END IF;
-			WHEN s9=>
-				IF sw10 = '1' THEN
-					next_state <= s8;
-				ELSE
+				WHEN s9=>
 					next_state <= s10;
-				END IF;
-			WHEN s10=>
-				IF sw10 = '1' THEN
-					next_state <= s9;
-				ELSE
+				WHEN s10=>
 					next_state <= s11;
-				END IF;
-			WHEN s11=>
-				IF sw10 = '1' THEN
-					next_state <= s10;
-				ELSE
+				WHEN s11=>
 					next_state <= s12;
-				END IF;
-			WHEN s12=>
-				IF sw10 = '1' THEN
-					next_state <= s11;
-				ELSE
+				WHEN s12=>
 					next_state <= s13;
-				END IF;
-			WHEN s13=>
-				IF sw10 = '1' THEN
-					next_state <= s12;
-				ELSE
+				WHEN s13=>
 					next_state <= s14;
-				END IF;
-			WHEN s14=>
-				IF sw10 = '1' THEN
-					next_state <= s13;
-				ELSE
+				WHEN s14=>
 					next_state <= s15;
-				END IF;
-			WHEN s15=>
-				IF sw10 = '1' THEN
-					next_state <= s14;
-				ELSE
+				WHEN s15=>
 					next_state <= s0;
-				END IF;
-			WHEN others =>
-				next_state <= s0;
-		END CASE;
-		--count_reset <= '1';
+				WHEN others =>
+					next_state <= s0;
+			END CASE;
+		ELSE -- Going counter clockwise
+			CASE head_state IS
+				WHEN s0 =>
+					next_state <= s15;
+				WHEN s1=>
+					next_state <= s0;
+				WHEN s2=>
+					next_state <= s1;
+				WHEN s3=>
+					next_state <= s2;
+				WHEN s4=>
+					next_state <= s3;
+				WHEN s5=>
+					next_state <= s4;
+				WHEN s6=>
+					next_state <= s5;
+				WHEN s7=>
+					next_state <= s6;
+				WHEN s8=>
+					next_state <= s7;
+				WHEN s9=>
+					next_state <= s8;
+				WHEN s10=>
+					next_state <= s9;
+				WHEN s11=>
+					next_state <= s10;
+				WHEN s12=>
+					next_state <= s11;
+				WHEN s13=>
+					next_state <= s12;
+				WHEN s14=>
+					next_state <= s13;
+				WHEN s15=>
+					next_state <= s14;
+				WHEN others =>
+					next_state <= s0;
+			END CASE;
+		END IF;
 	-- End process
 	END PROCESS;
 
 	process (sw1, sw2, sw3, sw4)
-		variable tempsize : unsigned (15 downto 0 ) := "0000000000000000";
+		-- This variable is just so we can do a case instead of ugly if conditions
+		VARIABLE switches : STD_LOGIC_VECTOR(3 DOWNTO 0);
 	begin
-		if sw4 = '0' and sw3 = '0' and sw2 = '0' and sw1 = '1' then
-			tempsize := "1000000000000000";
-		elsif sw4 = '0' and sw3 = '0' and sw2 = '1' and sw1 = '0' then
-			tempsize := "1100000000000000";
-		elsif sw4 = '0' and sw3 = '0' and sw2 = '1' and sw1 = '1' then
-			tempsize := "1110000000000000";
-		elsif sw4 = '0' and sw3 = '1' and sw2 = '0' and sw1 = '0' then
-			tempsize := "1111000000000000";
-		elsif sw4 = '0' and sw3 = '1' and sw2 = '0' and sw1 = '1' then
-			tempsize := "1111100000000000";
-		elsif sw4 = '0' and sw3 = '1' and sw2 = '1' and sw1 = '0' then
-			tempsize := "1111110000000000";
-		elsif sw4 = '0' and sw3 = '1' and sw2 = '1' and sw1 = '1' then
-			tempsize := "1111111000000000";
-		elsif sw4 = '1' and sw3 = '0' and sw2 = '0' and sw1 = '0' then
-			tempsize := "1111111100000000";
-		elsif sw4 = '1' and sw3 = '0' and sw2 = '0' and sw1 = '1' then
-			tempsize := "1111111110000000";
-		elsif sw4 = '1' and sw3 = '0' and sw2 = '1' and sw1 = '0' then
-			tempsize := "1111111111000000";
-		elsif sw4 = '1' and sw3 = '0' and sw2 = '1' and sw1 = '1' then
-			tempsize := "1111111111100000";
-		elsif sw4 = '1' and sw3 = '1' and sw2 = '0' and sw1 = '0' then
-			tempsize := "1111111111110000";
-		elsif sw4 = '1' and sw3 = '1' and sw2 = '0' and sw1 = '1' then
-			tempsize := "1111111111111000";
-		elsif sw4 = '1' and sw3 = '1' and sw2 = '1' and sw1 = '0' then
-			tempsize := "1111111111111100";
-		elsif sw4 = '1' and sw3 = '1' and sw2 = '1' and sw1 = '1' then
-			tempsize := "1111111111111110";
-		else
-			tempsize := (others => '0');
-		end if;
-		size <= tempsize;
+		switches := sw4 & sw3 & sw2 & sw1;
+		-- Translate the switches to a snake size
+		CASE switches IS
+			WHEN "0001" =>
+				size <= "1000000000000000";
+			WHEN "0010" =>
+				size <= "1100000000000000";
+			WHEN "0011" =>
+				size <= "1110000000000000";
+			WHEN "0100" =>
+				size <= "1111000000000000";
+			WHEN "0101" =>
+				size <= "1111100000000000";
+			WHEN "0110" =>
+				size <= "1111110000000000";
+			WHEN "0111" =>
+				size <= "1111111000000000";
+			WHEN "1000" =>
+				size <= "1111111100000000";
+			WHEN "1001" =>
+				size <= "1111111110000000";
+			WHEN "1010" =>
+				size <= "1111111111000000";
+			WHEN "1011" =>
+				size <= "1111111111100000";
+			WHEN "1100" =>
+				size <= "1111111111110000";
+			WHEN "1101" =>
+				size <= "1111111111111000";
+			WHEN "1110" =>
+				size <= "1111111111111100";
+			WHEN "1111" =>
+				size <= "1111111111111110";
+			WHEN OTHERS =>
+				size <= (others => '0');
+		END CASE;
 	end process;
 
-	-- Create process for Moore output logic for state_out  (outputs function of head_state only)
-	moore: PROCESS(head_state)
+	PROCESS(head_state)
 	BEGIN
-		-- Initialize state_out to default values so case only covers when they change
-		--state_out <= (others => '0');
+		-- Translate head_state into an amount to rotate the size
 		CASE head_state IS
 			WHEN s1 =>
 				shift_count <= 15;
@@ -232,11 +199,11 @@ BEGIN
 			WHEN others =>
 				shift_count <= 0;
 		END CASE;
-		-- End process
-	END PROCESS moore;
+	END PROCESS;
 
 	process (size, shift_count)
 	begin
+		-- Rotate the size left shift_count times to get the combined state (state + size)
 		state_out <= size rol shift_count;
 	end process;
 
