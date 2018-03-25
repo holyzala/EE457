@@ -86,7 +86,7 @@ begin
 
               
                 key  <=   "1111";   -- no reset
-                sw   <=   "0000000100";  -- NM-Active
+                sw   <=   "1000000100";  -- NM-Active
 
                 wait for 200*clk_cycle;
 
