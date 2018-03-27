@@ -28,20 +28,20 @@ BEGIN
 			-- If there's a 1 in one of those 4 then we're in the leftmost segment
 			-- and the output can be 1001110 with all lights lit up
 			-- We can use input or masked to get the values here, doesn't matter
-			output <= input(15) & "00" & input(2) & input(1) & input(0) & '0';
+			output <= not('0' & input(0) & input(1) & input(2) & "00" & input(15));
 		ELSIF masked(14) = '1' OR masked(3) = '1' THEN
-			output <= input(14) & "00" & input(3) & "000";
+			output <= not("000" & input(3) & "00" & input(14));
 		ELSIF masked(13) = '1' OR masked(4) = '1' THEN
-			output <= input(13) & "00" & input(4) & "000";
+			output <= not("000" & input(4) & "00" & input(13));
 		ELSIF masked(12) = '1' OR masked(5) = '1' THEN
-			output <= input(12) & "00" & input(5) & "000";
+			output <= not("000" & input(5) & "00" & input(12));
 		ELSIF masked(11) = '1' OR masked(6) = '1' THEN
-			output <= input(11) & "00" & input(6) & "000";
+			output <= not("000" & input(6) & "00" & input(11));
 		ELSIF masked(10) = '1' OR masked(9) = '1' OR masked(8) = '1' or masked(7) = '1' THEN
-			output <= input(10) & input(9) & input(8) & input(7) & "000";
+			output <= not("000" & input(7) & input(8) & input(9) & input(10));
 		-- If we didn't find any 1s in masked then don't do any lights
 		ELSE
-			output <= "0000000";
+			output <= not("0000000");
 		END IF;
 	end process;
 END LogicFunction;
