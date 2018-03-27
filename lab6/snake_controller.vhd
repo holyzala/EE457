@@ -31,7 +31,7 @@ BEGIN
 	PROCESS (clk, reset_a)
 	begin 
 		if reset_a = '1' then
-			head_state <= s1;
+			head_state <= s0;
 		elsif rising_edge(clk) then
 			if count = '1' then
 				head_state <= next_state;

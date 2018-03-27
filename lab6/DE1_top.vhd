@@ -89,7 +89,7 @@ BEGIN
 	-- The counter for second passing
 	u1: gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
-		generic map (wide => 26, max => 10)
+		generic map (wide => 26, max => 50000000)
 		PORT MAP (
 			clk => clock_50,
 			-- We never load it
