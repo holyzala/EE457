@@ -26,6 +26,7 @@ add wave -noupdate /de1_top_tb/dut/u8/head_state
 add wave -noupdate /de1_top_tb/dut/u8/next_state
 add wave -noupdate /de1_top_tb/dut/u8/count
 add wave -noupdate /de1_top_tb/dut/u8/state_out
+add wave -noupdate /de1_top_tb/dut/new_state
 
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {20940 ns} 0}

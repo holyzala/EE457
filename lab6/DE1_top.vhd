@@ -70,9 +70,9 @@ architecture struct of DE1_top is
 	-- Main controller for state logic
 	COMPONENT snake_controller
 		PORT (
-			reset_a, clk, sw1, sw2, sw3, sw4, sw10 : IN STD_LOGIC;
-			count: in std_logic;
-			state_out : out unsigned (15 downto 0)
+			sw1, sw2, sw3, sw4, sw10 : IN STD_LOGIC;
+			state_out : out unsigned (15 downto 0);
+			state_in : in std_logic_vector(3 downto 0)
 		);
 	END COMPONENT snake_controller;
 
@@ -82,6 +82,9 @@ architecture struct of DE1_top is
 	signal secondPassed : std_logic;
 	-- Reset key notted
 	signal key0_n : std_logic;
+	-- new "state"
+	signal new_state : std_logic_vector(3 downto 0);
+	
 BEGIN
 	-- Set the notted reset signal
 	key0_n <= not KEY(0);
@@ -148,9 +151,22 @@ BEGIN
 		sw3 => SW(2),
 		sw4 => SW(3),
 		sw10 => SW(9),
-		clk => clock_50, 
-		reset_a => key0_n,
-		count => secondPassed,
-		state_out => state_out_before_seg
-	);				
+		state_out => state_out_before_seg,
+		state_in => new_state
+	);
+
+	u9: gen_counter
+		-- 4 bit max 15 for "states"
+		generic map (wide => 4, max => 15)
+		PORT MAP (
+			clk => secondPassed,
+			-- We never load it
+			load => '0',
+			data => (others => '0'),
+			-- reset is key0 notted
+			reset => key0_n,
+			-- Always enabled
+			enable => '1',
+			count	=> new_state
+	);
 end;
