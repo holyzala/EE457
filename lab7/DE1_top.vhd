@@ -8,9 +8,8 @@ entity DE1_top is
 
 		-- 50Mhz clock, i.e. 50 Million rising edges per second
 		clock_50 :in  std_logic; 
+		
 		-- 7 Segment Display
-		-- driving the the individual bit loicall low will
-		-- light up the segment.
 		HEX0		:out	std_logic_vector( 6 downto 0); -- right most
 		HEX1		:out	std_logic_vector( 6 downto 0);	
 		HEX2		:out	std_logic_vector( 6 downto 0);	
@@ -37,7 +36,126 @@ entity DE1_top is
 end entity DE1_top;
 
 architecture struct of DE1_top is
-begin 
+
+	COMPONENT gen_counter
+		generic (
+			wide : positive; -- how many bits is the counter
+			max  : positive  -- what is the max value of the counter ( modulus )
+			);
+
+		PORT (
+			clk	 :in  std_logic; -- system clock
+			data	 :in  std_logic_vector( wide-1 downto 0 ); -- data in for parallel load, use unsigned(data) to cast to unsigned
+			load	 :in  std_logic; -- signal to load data into i_count i_count <= unsigned(data);
+			enable :in  std_logic; -- clock enable
+			reset	 :in  std_logic; -- reset to zeros use i_count <= (others => '0' ) since size depends on generic
+			count	 :out std_logic_vector( wide-1 downto 0 ); -- count out
+			term	 :out std_logic -- maximum count is reached
+		);
+	END COMPONENT gen_counter;
+	
+	
+	COMPONENT washing_controller
+		PORT(
+			-- Declare control inputs
+			sw0, sw1 : IN STd_LOgIC;
+			
+			-- done signal from the lower states
+			nextGo : IN STD_LOGIC; 
+			
+			-- key 0
+			stop : IN STD_LOGIC;
+			
+			-- output bit vector representing the states
+			state_out : OUT STD_LOGIC_VECTOR (2 downto 0)
+			);
+	END COMPONENT washing_controller;
+	
+	-- Declare signals to go between components
+	SIGNAL fill_drain : STD_LOGIC;
+	SIGNAL wash : STD_LOGIC;
+	SIGNAL spin : STD_LOGIC;
+	SIGNAL stop_n : STD_LOGIC;
+	SIGNAL state: unsigned(2 downto 0);
 
 
-end;
+BEGIN
+	
+		stop_n <= not KEY(0);
+
+	-- FOR THE COUNTERS NEED TO RESET THE COUNTERS ON THE START OF THE PROCESSES
+	-- counter for spin
+		u1: gen_counter
+		-- 26 bits wide and 50,000,000 max for 1 second
+		generic map (wide => 26, max => 50000000/4)
+		PORT MAP (
+			clk => clock_50,
+			-- We never load it
+			load => '0',
+			data => (others => '0'),
+			-- reset is key0 notted
+			reset => key0_n,
+			-- Always enabled
+			enable => '1',
+			-- Once term (max) is hit we have a second
+			term => secondPassed
+		);
+	
+	
+	--couter for wash/rinse
+		u2: gen_counter
+		-- 26 bits wide and 50,000,000 max for 1 second
+		generic map (wide => 26, max => 100000000/7)
+		PORT MAP (
+			clk => clock_50,
+			-- We never load it
+			load => '0',
+			data => (others => '0'),
+			-- reset is key0 notted
+			reset => key0_n,
+			-- Always enabled
+			enable => '1',
+			-- Once term (max) is hit we have a second
+			term => secondPassed
+		);
+	
+	
+	-- counter for fill/drain
+		u3: gen_counter
+		-- 26 bits wide and 50,000,000 max for 1 second
+		generic map (wide => 26, max => 50000000)
+		PORT MAP (
+			clk => clock_50,
+			-- We never load it
+			load => '0',
+			data => (others => '0'),
+			-- reset is key0 notted
+			reset => key0_n,
+			-- Always enabled
+			enable => '1',
+			-- Once term (max) is hit we have a second
+			term => secondPassed
+		);
+	
+		-- 3 DONE SIGNALS??????
+		u4: washing_controller
+		PORT MAP (
+			sw0=> SW(0),
+			sw1=> SW(1),
+			nextGo=> next_sig,
+			stop=> stop_n,
+			state_out => state
+		);
+		
+		u5:
+		
+		
+		
+		u6:
+		
+		
+		
+		u7:
+	
+
+END;
