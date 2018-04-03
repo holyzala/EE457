@@ -7,9 +7,12 @@ ENTITY washing_controller IS
 	PORT(
 		-- Declare control inputs
 		sw0, sw1 : IN STd_LOgIC;
-		
+		clk : IN STD_LOGIC;
 		-- done signal from the lower states
-		nextGo : IN STD_LOGIC; 
+		start : IN STD_LOGIC;
+		donesig : IN STD_LOGIC;
+		donesig2 : IN STD_LOGIC;
+		donesig3 : IN STD_LOGIC;
 		
 		-- key 0
 		stop : IN STD_LOGIC;
@@ -22,8 +25,7 @@ END ENTITY washing_controller;
 
 -- Begin Architecture
 ARCHITECTURE Logic of washing_Controller IS
-BEGIN
-	
+
 	TYPE state_type IS (idle, fill, wash, spin, drain);
 	
 	
@@ -33,8 +35,15 @@ BEGIN
 	SIGNAL second_drain: STD_LOGIC;
 	SIGNAL rinse: STD_LOGIC;
 	
+BEGIN	
+
 	Process (current_state, clk, stop)
+	
+		VARIABLE done_flg : STD_LOGIC;
+	
 	BEGIN
+		done_flg := start or donesig or donesig3 or donesig3;
+	
 		if stop = '1' THEN
 			if current_state = idle then
 				current_state <= idle;
@@ -42,7 +51,7 @@ BEGIN
 				current_state <= drain;
 			end if;
 		elsif rising_edge(clk) THEN
-			if nextGo = '1' THEN
+			if done_flg = '1' THEN
 				current_state <= next_state;
 			end if;
 		end if;
@@ -50,11 +59,10 @@ BEGIN
 	
 	
 	outer_state: Process (sw0, sw1, current_state)
+		 
+		VARIABLE switches :STD_LOGIC_VECTOR(1 downto 0);
 		
-		SIGNAL 
-		VARIABLE switches :STD_LOGIC_VECTOR(1 downto 0);)
-		
-	BEGIN:
+	BEGIN
 		switches := sw1 & sw0;
 		
 		if switches = "01" then
@@ -79,8 +87,6 @@ BEGIN
 						next_state <= idle;
 						second_drain <= '0';
 					end if;
-				WHEN fill =>
-					next_state <= wash;
 				WHEN spin =>
 					next_state <= drain;
 				WHEN OTHERS =>
@@ -97,6 +103,8 @@ BEGIN
 					next_state <= spin;
 				WHEN drain =>
 					next_state <= idle;
+				WHEN OTHERS =>
+					next_state <= idle;			
 			END CASE;
 		
 		else
@@ -106,6 +114,7 @@ BEGIN
 	END Process;
 	
 	Process (current_state)
+	Begin
 		-- use a 3 bit vector to represent states to pass them to the inner state machines
 		CASE current_state IS
 			WHEN idle =>
@@ -123,6 +132,4 @@ BEGIN
 		END CASE;
 	END PROCESS;
 	
-	End process;
-
 END Logic;

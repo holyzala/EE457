@@ -11,7 +11,7 @@ ENTITY spin_controller IS
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
 		clk : IN STD_LOGIC;
-		next_cycle : IN STD_LOGIC;
+		next_cycle : IN STD_LOGIC
 	);
 END ENTITY spin_controller;
 

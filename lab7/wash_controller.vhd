@@ -3,7 +3,7 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 
 -- Begin entity declaration for "control"
-ENTITY spin_controller IS
+ENTITY wash_controller IS
 	-- Begin port declaration
 	PORT (
 		-- Declare control inputs 
@@ -11,19 +11,20 @@ ENTITY spin_controller IS
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
 		clk : IN STD_LOGIC;
-		next_cycle : IN STD_LOGIC;
+		next_cycle : IN STD_LOGIC
 	);
-END ENTITY spin_controller;
+END ENTITY wash_controller;
 
 --  Begin architecture 
-ARCHITECTURE logic OF spin_controller IS
+ARCHITECTURE logic OF wash_controller IS
+
 	TYPE state_type IS (wash1, wash2, wash3, wash4);
 
 	-- Declare two signals named "head_state" and "next_state" to be of enumerated type
 	SIGNAL head_state: state_type;
 	SIGNAL next_state: state_type;
 	SIGNAL second_stage: STD_LOGIC;
-	
+
 BEGIN
 	-- rising edge transitions; Use asynchronous clear control
 	-- set the next state aka move the snake around the clock.
