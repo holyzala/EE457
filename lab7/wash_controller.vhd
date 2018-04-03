@@ -26,19 +26,10 @@ ARCHITECTURE logic OF wash_controller IS
 	SIGNAL second_stage: STD_LOGIC;
 
 BEGIN
-	-- rising edge transitions; Use asynchronous clear control
-	-- set the next state aka move the snake around the clock.
-	PROCESS (clk, next_cycle)
-	begin
-		done <= '0';
-		if rising_edge(next_cycle) then
-			head_state <= next_state;
-		end if;
-	END PROCESS;
-
 	-- Figure out the next state for the head based on if they have been swapped
 	PROCESS (head_state, state_in)
 	BEGIN
+		done <= '0';
 		IF state_in = "010" THEN
 			IF second_stage = '0' THEN
 				CASE head_state IS
@@ -71,7 +62,6 @@ BEGIN
 				END CASE;
 			END IF;
 		ELSE
-			done <= '0';
 			second_stage <= '0';
 			next_state <= wash1;
 		END IF;

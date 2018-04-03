@@ -10,7 +10,6 @@ ENTITY spin_controller IS
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
-		clk : IN STD_LOGIC;
 		next_cycle : IN STD_LOGIC
 	);
 END ENTITY spin_controller;
@@ -24,20 +23,19 @@ ARCHITECTURE logic OF spin_controller IS
 	SIGNAL next_state: state_type;
 	
 BEGIN
-	-- rising edge transitions; Use asynchronous clear control
-	-- set the next state aka move the snake around the clock.
-	PROCESS (clk, next_cycle)
+	PROCESS (next_cycle)
 	begin
-		done <= '0';
 		if rising_edge(next_cycle) then
 			head_state <= next_state;
 		end if;
 	END PROCESS;
 
+	
 	-- Figure out the next state for the head based on if they have been swapped
 	PROCESS (head_state, state_in)
 	BEGIN
 		IF state_in = "100" THEN
+			done <= '0';
 			CASE head_state IS
 				WHEN spin1 =>
 					next_state <= spin2;

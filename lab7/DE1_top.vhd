@@ -94,7 +94,6 @@ architecture struct of DE1_top is
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
-		clk : IN STD_LOGIC;
 		next_cycle: IN STD_LOGIC
 
 	);
@@ -107,7 +106,6 @@ architecture struct of DE1_top is
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
-		clk : IN STD_LOGIC;
 		next_cycle: IN STD_LOGIC
 	);
 	END COMPONENT spin_controller;
@@ -221,7 +219,6 @@ BEGIN
  				state_in => state,
 				hex_out => hex_out_b,
 				done => spin_done,
-				clk => clock_50,
 				next_cycle => spin
 		);
 		
@@ -230,7 +227,6 @@ BEGIN
 				state_in => state,
 				hex_out => hex_out_a,
 				done => wash_done,
-				clk => clock_50,
 				next_cycle => wash_rinse
 		);
 		
