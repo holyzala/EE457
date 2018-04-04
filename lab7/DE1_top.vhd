@@ -136,6 +136,10 @@ BEGIN
 	
 		stop_n <= not KEY(0);
 		start_n <= not KEY(1);
+		HEX2 <= "1111111";
+		HEX3 <= "1111111";
+		HEX4 <= "1111111";
+		HEX5 <= "1111111";
 
 	-- FOR THE COUNTERS NEED TO RESET THE COUNTERS ON THE START OF THE PROCESSES
 	-- counter for spin

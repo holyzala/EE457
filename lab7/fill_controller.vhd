@@ -59,22 +59,22 @@ BEGIN
 		IF drain = '0' THEN
 			CASE head_state IS
 				WHEN fill1 =>
-					hex_out <= "0111111";
-				WHEN fill2 =>
 					hex_out <= "1110111";
-				WHEN fill3 =>
+				WHEN fill2 =>
 					hex_out <= "1111110";
+				WHEN fill3 =>
+					hex_out <= "0111111";
 				WHEN OTHERS =>
 					hex_out <= "1111111";
 			END CASE;
 		ELSE
 			CASE head_state IS
 				WHEN fill1 =>
-					hex_out <= "1111110";
-				WHEN fill2 =>
-					hex_out <= "1110111";
-				WHEN fill3 =>
 					hex_out <= "0111111";
+				WHEN fill2 =>
+					hex_out <= "1111110";
+				WHEN fill3 =>
+					hex_out <= "1110111";
 				WHEN OTHERS =>
 					hex_out <= "1111111";
 			END CASE;
