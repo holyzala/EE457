@@ -27,17 +27,15 @@ ARCHITECTURE logic OF fill_controller IS
 BEGIN
 	PROCESS (next_cycle)
 	begin
-		
-			if next_cycle = '1' then
-				head_state <= next_state;
-			end if;
-			
+		if rising_edge(next_cycle) then
+			head_state <= next_state;
+		end if;
 	END PROCESS;
-	
 
 	-- Figure out the next state for the head based on if they have been swapped
 	PROCESS (head_state, state_in)
 	BEGIN
+		done <= '0';
 		IF state_in = "001" or state_in = "011" THEN
 			CASE head_state IS
 				WHEN fill1 =>
@@ -45,12 +43,12 @@ BEGIN
 				WHEN fill2 =>
 					next_state <= fill3;
 				WHEN fill3 =>
+					done <= '1';
 					next_state <= fill3;
 				WHEN OTHERS =>
 					next_state <= fill1;
 			END CASE;
 		ELSE
-			done <= '0';
 			next_state <= fill1;
 		END IF;
 	-- End process

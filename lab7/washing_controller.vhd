@@ -61,6 +61,7 @@ BEGIN
 	outer_state: Process (sw0, sw1, current_state)
 		 
 		VARIABLE switches :STD_LOGIC_VECTOR(1 downto 0);
+		VARIABLE drain_state : state_type;
 		
 	BEGIN
 		switches := sw1 & sw0;

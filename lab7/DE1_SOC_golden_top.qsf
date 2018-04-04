@@ -753,6 +753,8 @@ set_global_assignment -name ADVANCED_PHYSICAL_OPTIMIZATION OFF
 set_global_assignment -name BOARD "DE1-SoC Board"
 set_global_assignment -name EDA_TEST_BENCH_FILE gen_counter.vhd -section_id gen_counter_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE gen_counter_tb.vhd -section_id gen_counter_tb
+set_global_assignment -name VHDL_FILE washing_controller.vhd
+set_global_assignment -name VHDL_FILE fill_controller.vhd
 set_global_assignment -name VHDL_FILE wash_controller.vhd
 set_global_assignment -name VHDL_FILE DE1_top.vhd
 set_global_assignment -name VHDL_FILE counter.vhd

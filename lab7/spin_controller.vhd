@@ -30,12 +30,11 @@ BEGIN
 		end if;
 	END PROCESS;
 
-	
 	-- Figure out the next state for the head based on if they have been swapped
 	PROCESS (head_state, state_in)
 	BEGIN
+		done <= '0';
 		IF state_in = "100" THEN
-			done <= '0';
 			CASE head_state IS
 				WHEN spin1 =>
 					next_state <= spin2;

@@ -26,12 +26,20 @@ ARCHITECTURE logic OF wash_controller IS
 	SIGNAL second_stage: STD_LOGIC;
 
 BEGIN
+	PROCESS (next_cycle)
+	begin
+		if rising_edge(next_cycle) then
+			head_state <= next_state;
+		end if;
+	END PROCESS;
+
 	-- Figure out the next state for the head based on if they have been swapped
 	PROCESS (head_state, state_in)
 	BEGIN
 		done <= '0';
 		IF state_in = "010" THEN
 			IF second_stage = '0' THEN
+				second_stage <= '0';
 				CASE head_state IS
 					WHEN wash1 =>
 						next_state <= wash2;
@@ -46,6 +54,7 @@ BEGIN
 						next_state <= wash1;
 				END CASE;
 			ELSE
+				second_stage <= '1';
 				CASE head_state IS
 					WHEN wash1 =>
 						next_state <= wash1;
