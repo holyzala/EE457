@@ -33,7 +33,7 @@ BEGIN
 	END PROCESS;
 
 	-- Figure out the next state for the head based on if they have been swapped
-	PROCESS (head_state, state_in)
+	PROCESS (head_state, state_in, second_stage)
 	BEGIN
 		done <= '0';
 		IF state_in = "010" THEN
