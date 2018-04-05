@@ -80,7 +80,6 @@ architecture struct of DE1_top is
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
-		clk : IN STD_LOGIC;
 		next_cycle: IN STD_LOGIC
 
 	);
@@ -214,7 +213,6 @@ BEGIN
 				state_in => state,
 				hex_out=> HEX0,
 				done => fill_done,
-				clk => clock_50,
 				next_cycle => fill_drain
 		);
 		
