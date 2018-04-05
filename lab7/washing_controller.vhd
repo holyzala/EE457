@@ -37,7 +37,7 @@ ARCHITECTURE Logic of washing_Controller IS
 	
 BEGIN	
 
-	Process (current_state, clk, stop)
+	Process (current_state, clk, stop, start, donesig, donesig2, donesig3)
 	
 		VARIABLE done_flg : STD_LOGIC;
 	
@@ -102,6 +102,8 @@ BEGIN
 					next_state <= wash;
 				WHEN wash =>
 					next_state <= spin;
+				WHEN spin =>
+					next_state <= drain;
 				WHEN drain =>
 					next_state <= idle;
 				WHEN OTHERS =>
