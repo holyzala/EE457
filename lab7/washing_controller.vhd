@@ -26,15 +26,12 @@ END ENTITY washing_controller;
 -- Begin Architecture
 ARCHITECTURE Logic of washing_Controller IS
 
-	TYPE state_type IS (idle, fill, wash, spin, drain);
+	TYPE state_type IS (idle, fill, wash, spin, drain, drain1, rinse, fill2);
 	
 	
 	SIGNAL current_state: state_type;
 	SIGNAL next_state: state_type;
-	
-	SIGNAL second_drain: STD_LOGIC;
-	SIGNAL rinse: STD_LOGIC;
-	
+
 BEGIN	
 
 	Process (current_state, clk, stop, start, donesig, donesig2, donesig3)
@@ -61,7 +58,6 @@ BEGIN
 	outer_state: Process (sw0, sw1, current_state)
 		 
 		VARIABLE switches :STD_LOGIC_VECTOR(1 downto 0);
-		VARIABLE drain_state : state_type;
 		
 	BEGIN
 		switches := sw1 & sw0;
@@ -73,23 +69,17 @@ BEGIN
 				WHEN fill =>
 					next_state <= wash;
 				WHEN wash =>
-					if rinse = '0' then
-						next_state <= drain;
-						rinse <= '1';
-					else 
-						next_state <= spin;
-						rinse <= '0';
-					end if;
-				WHEN drain =>
-					if second_drain = '0' then
-						next_state <= fill;
-						second_drain <= '1';
-					else 
-						next_state <= idle;
-						second_drain <= '0';
-					end if;
+					next_state <= drain1;
+				WHEN drain1 => 
+					next_state <= fill2;
+				WHEN fill2 =>
+					next_state <= rinse;
+				WHEN rinse =>
+					next_state <= spin;
 				WHEN spin =>
 					next_state <= drain;
+				WHEN drain =>
+					next_state <= idle;
 				WHEN OTHERS =>
 					next_state <= idle;
 			END CASE;
@@ -124,9 +114,15 @@ BEGIN
 				state_out <= "000";
 			WHEN fill =>
 				state_out <= "001";
+			WHEN fill2 =>
+				state_out <= "001";
 			WHEN wash =>
 				state_out <= "010";
+			WHEN rinse =>
+				state_out <= "010";
 			WHEN drain =>
+				state_out <= "011";
+			WHEN drain1 =>
 				state_out <= "011";
 			WHEN spin =>
 				state_out <= "100";
