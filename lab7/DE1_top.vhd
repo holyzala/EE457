@@ -129,7 +129,7 @@ architecture struct of DE1_top is
 	SIGNAL wash_done : STD_LOGIC;
 	SIGNAL hex_out_b : std_logic_vector (6 downto 0);
 	SIGNAL hex_out_a : std_logic_vector (6 downto 0);
-
+	CONSTANT timer : integer := 50;
 
 BEGIN
 	
@@ -144,7 +144,7 @@ BEGIN
 	-- counter for spin
 		u1: gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
-		generic map (wide => 26, max => 50000000/4)
+		generic map (wide => 26, max => timer/4)
 		PORT MAP (
 			clk => clock_50,
 			-- We never load it
@@ -162,7 +162,7 @@ BEGIN
 	--couter for wash/rinse
 		u2: gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
-		generic map (wide => 26, max => 100000000/7)
+		generic map (wide => 26, max => timer*2/7)
 		PORT MAP (
 			clk => clock_50,
 			-- We never load it
@@ -180,7 +180,7 @@ BEGIN
 	-- counter for fill/drain
 		u3: gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
-		generic map (wide => 26, max => 50000000)
+		generic map (wide => 26, max => timer)
 		PORT MAP (
 			clk => clock_50,
 			-- We never load it

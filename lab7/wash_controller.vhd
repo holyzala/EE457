@@ -10,7 +10,6 @@ ENTITY wash_controller IS
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
-		clk : IN STD_LOGIC;
 		next_cycle : IN STD_LOGIC
 	);
 END ENTITY wash_controller;

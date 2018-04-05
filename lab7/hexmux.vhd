@@ -4,9 +4,9 @@ USE ieee.STD_LOGIC_1164.all;
 
 ENTITY hexmux IS
 	PORT (
-		hex_a, hex_b : IN unsigned (6 downto 0);
+		hex_a, hex_b : IN STD_LOGIC_VECTOR (6 downto 0);
 		state_sel : IN STD_LOGIC_VECTOR (2 downto 0);
-		hex_out : OUT unsigned (6 downto 0));
+		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0));
 END ENTITY hexmux;
 
 ARCHITECTURE LogicFunction OF hexmux IS

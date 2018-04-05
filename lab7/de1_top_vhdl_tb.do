@@ -17,10 +17,13 @@
 #******************************************************************************
 
 vlib work
-vcom snake_segment_cntrl.vhd
-vcom snake_controller.vhd
-vcom counter.vhd 
+vcom washing_controller.vhd
+vcom fill_controller.vhd
+vcom wash_controller.vhd
 vcom de1_top.vhd 
+vcom counter.vhd 
+vcom spin_controller.vhd
+vcom hexmux.vhd
 # Add any additional files here 
 vcom de1_top_vhdl_tb.vhd 
 vsim -t ns work.de1_top_tb
