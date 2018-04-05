@@ -46,84 +46,76 @@ signal hex4	  : std_logic_vector(6 downto 0);
 signal hex5	  : std_logic_vector(6 downto 0); -- left most
 
 begin
-	
-	
 	clock:process begin  -- this process just continues to run as the simulation time continues
-		 clk <= '0';
-		 wait for CLK_PER;
-		 clk <= '1';
-		 wait for CLK_PER;
-		 end process;
+		clk <= '0';
+		wait for CLK_PER;
+		clk <= '1';
+		wait for CLK_PER;
+	end process;
 		
-	
-	
-	vectors:
+	vectors: process begin -- put you test vectors here, remember to advance the simulation in modelsim
+		sw <= "0000000000"; -- drive all the switch inputs to a 0
+		key <= "1110"; -- default state on the board, and reset
 
-       process begin -- put you test vectors here, remember to advance the simulation in modelsim
+		wait for 5 ns; -- wait for a fraction of the clock so stimulus is not occuring on clock edges
 
-                 sw   <=   "0000000000";               -- drive all the switch inputs to a 0
-		 key  <=   "1110";                     -- default state on the board, and reset
+		sw <= "0000000001"; -- NS-G
+		key <= "1101"; -- no reset
+		
+		wait for clk_cycle;
+		key <= "1111";
 
-		 wait for 5 ns; 		-- wait for a fraction of the clock so stimulus is not occuring on clock edges
+		wait for 500*clk_cycle;
 
-                key  <=   "1111";   -- no reset
-                sw   <=   "0000000000";  -- NS-G
+		key <= "1101"; -- no reset
+		sw <= "0000000010"; -- EW-LT- Active
+		
+		wait for clk_cycle;
+		
+		key <= "1111";
 
-                wait for 200*clk_cycle;
+		wait for 500*clk_cycle;
 
+		key <= "1111"; -- no reset
+		sw <= "0000000010"; -- NS-LT-Active
 
-                key  <=   "1111";   -- no reset
-                sw   <=   "0000000001";  -- EW-LT- Active
+		wait for 200*clk_cycle;
 
-                wait for 200*clk_cycle;
+		key <= "1111";   -- no reset
+		sw <= "1000000100";  -- NM-Active
 
-               
-               key  <=   "1111";   -- no reset
-                sw   <=   "0000000010";  -- NS-LT-Active
+		wait for 200*clk_cycle;
 
-                wait for 200*clk_cycle;
+		key <= "1110";   --  reset
+		sw <= "0000000000";  
 
-
-              
-                key  <=   "1111";   -- no reset
-                sw   <=   "1000000100";  -- NM-Active
-
-                wait for 200*clk_cycle;
-
-
-                key  <=   "1110";   --  reset
-                sw   <=   "0000000000";  
-
-                wait for 100*clk_cycle;
- 
-               
-				
-		end process;
+		wait for 100*clk_cycle;
+	end process;
 
 		
 
 -- instantiate the device under test (dut)
 dut :de1_top
 generic map (
-		simulation_wide => 4, -- make it 4 bits
-		simulation_max  => 10 -- have it only count to 10 for shorter simulation
-		)
+	simulation_wide => 4, -- make it 4 bits
+	simulation_max  => 10 -- have it only count to 10 for shorter simulation
+	)
 port map (
-  CLOCK_50 => clk,
-   -- 7 Segment Display
+	CLOCK_50 => clk,
+	-- 7 Segment Display
 	HEX0 => hex0,--		:out	std_logic_vector( 6 downto 0); -- right most
 	HEX1 => hex1,--		:out	std_logic_vector( 6 downto 0);	
 	HEX2 => hex2,-- 	:out	std_logic_vector( 6 downto 0);	
 	HEX3 => hex3,--     :out	std_logic_vector( 6 downto 0);	
 	HEX4 => hex4,--		:out	std_logic_vector( 6 downto 0);	
 	HEX5 => hex5,--	    :out	std_logic_vector( 6 downto 0); -- left most
-   -- Red LEDs above Slider switches
-   LEDR => ledr,--		:out	std_logic_vector( 9 downto 0);	
+	-- Red LEDs above Slider switches
+	LEDR => ledr,--		:out	std_logic_vector( 9 downto 0);	
 	-- Push Button
 	KEY => key, --	    :in     std_logic_vector( 3 downto 0);  
-   -- Slider Switch
-   SW  => sw--		:in	std_logic_vector( 9 downto 0 ) 
-		);	
+	-- Slider Switch
+	SW  => sw--		:in	std_logic_vector( 9 downto 0 ) 
+	);	
 end architecture;
 		
 		
