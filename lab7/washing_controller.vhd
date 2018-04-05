@@ -42,7 +42,7 @@ BEGIN
 		VARIABLE done_flg : STD_LOGIC;
 	
 	BEGIN
-		done_flg := start or donesig or donesig3 or donesig3;
+		done_flg := start or donesig or donesig2 or donesig3;
 	
 		if stop = '1' THEN
 			if current_state = idle then

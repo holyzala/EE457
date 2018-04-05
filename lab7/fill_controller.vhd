@@ -10,7 +10,7 @@ ENTITY fill_controller IS
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0); -- Master state
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0); -- Light sequence
 		done : OUT STD_LOGIC; -- If this mini state is complete
-		next_cycle : IN STD_LOGIC; -- The counter that acts as a clock in here
+		next_cycle : IN STD_LOGIC -- The counter that acts as a clock in here
 	);
 END ENTITY fill_controller;
 
@@ -51,7 +51,7 @@ BEGIN
 					next_state <= fill1;
 			END CASE;
 		-- Otherwise it goes down
-		ELSIF or state_in = "011" THEN
+		ELSIF state_in = "011" THEN
 			CASE head_state IS
 				WHEN fill1 =>
 					-- When the tub is empty move to the next state
@@ -65,7 +65,7 @@ BEGIN
 					next_state <= fill3;
 			END CASE;
 		ELSE
-			next_state <= fill1;
+			next_state <= head_state;
 		END IF;
 	-- End process
 	END PROCESS;
