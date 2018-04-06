@@ -23,7 +23,7 @@ add wave -noupdate /de1_top_tb/dut/u4/donesig2
 add wave -noupdate /de1_top_tb/dut/u4/donesig3
 add wave -noupdate /de1_top_tb/dut/u4/start
 add wave -noupdate /de1_top_tb/dut/u4/stop
-add wave -noupdate /de1_top_tb/dut/u4/started
+add wave -noupdate /de1_top_tb/dut/u4/running
 
 add wave -noupdate -divider {Fill Control}
 add wave -noupdate /de1_top_tb/dut/u5/head_state

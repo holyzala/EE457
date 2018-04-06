@@ -31,25 +31,35 @@ ARCHITECTURE Logic of washing_Controller IS
 
 	SIGNAL current_state: state_type;
 	SIGNAL next_state: state_type;
-	SIGNAL started : STD_LOGIC;
+	-- Determine if we're in the middle of a wash cycle
+	SIGNAL running : STD_LOGIC;
 
 BEGIN
 	PROCESS (clk, stop, start)
+		-- stores the done state of lower cycles to determine if we move to the next state
 		VARIABLE done_flg : STD_LOGIC;
 	BEGIN
+		-- Get the lower state machine statuses (if any are done move state)
 		done_flg := donesig or donesig2 or donesig3;
+		-- Check if the start button has been pushed
 		IF start = '1' THEN
-			IF started = '0' THEN
+			-- If we're already running, do nothing
+			IF running = '0' THEN
+				-- Otherwise we want to move to the next state
 				done_flg := '1';
 			END IF;
 		END IF;
+		-- If the stop button is pressed we want to go to idle
 		IF stop = '1' THEN
 			if current_state = idle then
 				current_state <= idle;
+			-- If we aren't already in idle we have to go through drain first
 			else
 				current_state <= drain;
 			end if;
 		elsif rising_edge(clk) THEN
+			-- Instead of turning the counters on and off we just reset them all every time
+			-- we change states, that way every sub state starts with a fresh counter state
 			if done_flg = '1' THEN
 				reset_out <= '1';
 				current_state <= next_state;
@@ -66,11 +76,13 @@ BEGIN
 		
 	BEGIN
 		switches := sw1 & sw0;
-		started <= '1';
+		-- default is assume we are running, set to 0 when we aren't
+		running <= '1';
+		-- switches determine the two different wash cycles
 		if switches = "01" then
 			CASE current_state IS
 				WHEN idle =>
-					started <= '0';
+					running <= '0';
 					next_state <= fill;
 				WHEN fill =>
 					next_state <= wash;
@@ -87,14 +99,14 @@ BEGIN
 				WHEN drain =>
 					next_state <= idle;
 				WHEN OTHERS =>
-					started <= '0';
+					running <= '0';
 					next_state <= idle;
 			END CASE;
 			
 		elsif switches = "10" then
 			CASE current_state IS
 				WHEN idle =>
-					started <= '0';
+					running <= '0';
 					next_state <= fill;
 				WHEN fill =>
 					next_state <= wash;
@@ -105,12 +117,12 @@ BEGIN
 				WHEN drain =>
 					next_state <= idle;
 				WHEN OTHERS =>
-					started <= '0';
+					running <= '0';
 					next_state <= idle;			
 			END CASE;
-		
+		-- any other switch state means it's not a valid input
 		else
-			started <= '0';
+			running <= '0';
 			next_state <= idle;
 		end if;
 		
