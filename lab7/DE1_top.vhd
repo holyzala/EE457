@@ -69,7 +69,8 @@ architecture struct of DE1_top is
 			stop : IN STD_LOGIC;
 			
 			-- output bit vector representing the states
-			state_out : OUT STD_LOGIC_VECTOR (2 downto 0)
+			state_out : OUT STD_LOGIC_VECTOR (2 downto 0);
+			reset_out : OUT STD_LOGIC
 			);
 	END COMPONENT washing_controller;
 	
@@ -80,6 +81,7 @@ architecture struct of DE1_top is
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
+		clk : IN STD_LOGIC;
 		next_cycle: IN STD_LOGIC
 
 	);
@@ -93,6 +95,7 @@ architecture struct of DE1_top is
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
+		clk : IN STD_LOGIC;
 		next_cycle: IN STD_LOGIC
 
 	);
@@ -105,6 +108,7 @@ architecture struct of DE1_top is
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
+		clk : IN STD_LOGIC;
 		next_cycle: IN STD_LOGIC
 	);
 	END COMPONENT spin_controller;
@@ -129,7 +133,9 @@ architecture struct of DE1_top is
 	SIGNAL wash_done : STD_LOGIC;
 	SIGNAL hex_out_b : std_logic_vector (6 downto 0);
 	SIGNAL hex_out_a : std_logic_vector (6 downto 0);
-	CONSTANT timer : integer := 50;
+	CONSTANT timer : integer := 20;
+	--CONSTANT timer : integer := 50000000;
+	SIGNAL count_reset : STD_LOGIC;
 
 BEGIN
 	
@@ -151,7 +157,7 @@ BEGIN
 			load => '0',
 			data => (others => '0'),
 			-- reset is key0 notted
-			reset => stop_n,
+			reset => count_reset,
 			-- Always enabled
 			enable => '1',
 			-- Once term (max) is hit we have a second
@@ -169,7 +175,7 @@ BEGIN
 			load => '0',
 			data => (others => '0'),
 			-- reset is key0 notted
-			reset => stop_n,
+			reset => count_reset,
 			-- Always enabled
 			enable => '1',
 			-- Once term (max) is hit we have a second
@@ -187,7 +193,7 @@ BEGIN
 			load => '0',
 			data => (others => '0'),
 			-- reset is key0 notted
-			reset => stop_n,
+			reset => count_reset,
 			-- Always enabled
 			enable => '1',
 			-- Once term (max) is hit we have a second
@@ -205,7 +211,8 @@ BEGIN
 			donesig2 => wash_done,
 			donesig3 => spin_done,
 			stop=> stop_n,
-			state_out => state
+			state_out => state,
+			reset_out => count_reset
 		);
 		
 		u5: fill_controller
@@ -213,7 +220,8 @@ BEGIN
 				state_in => state,
 				hex_out=> HEX0,
 				done => fill_done,
-				next_cycle => fill_drain
+				next_cycle => fill_drain,
+				clk => clock_50
 		);
 		
 		u6: spin_controller
@@ -221,7 +229,8 @@ BEGIN
  				state_in => state,
 				hex_out => hex_out_b,
 				done => spin_done,
-				next_cycle => spin
+				next_cycle => spin,
+				clk => clock_50
 		);
 		
 		u7: wash_controller
@@ -229,6 +238,7 @@ BEGIN
 				state_in => state,
 				hex_out => hex_out_a,
 				done => wash_done,
+				clk => clock_50,
 				next_cycle => wash_rinse
 		);
 		

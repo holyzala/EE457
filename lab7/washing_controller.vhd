@@ -18,7 +18,8 @@ ENTITY washing_controller IS
 		stop : IN STD_LOGIC;
 		
 		-- output bit vector representing the states
-		state_out : OUT STD_LOGIC_VECTOR (2 downto 0)
+		state_out : OUT STD_LOGIC_VECTOR (2 downto 0);
+		reset_out : OUT STD_LOGIC
 	);
 
 END ENTITY washing_controller;
@@ -49,7 +50,10 @@ BEGIN
 			end if;
 		elsif rising_edge(clk) THEN
 			if done_flg = '1' THEN
+				reset_out <= '1';
 				current_state <= next_state;
+			else
+				reset_out <= '0';
 			end if;
 		end if;
 	END Process;

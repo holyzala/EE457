@@ -10,23 +10,28 @@ ENTITY spin_controller IS
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
+		clk : IN STD_LOGIC;
 		next_cycle : IN STD_LOGIC
 	);
 END ENTITY spin_controller;
 
 --  Begin architecture 
 ARCHITECTURE logic OF spin_controller IS
-	TYPE state_type IS (spin1, spin2, spin3, spin4);
+	TYPE state_type IS (spin1, spin2, spin3, spin4, done_spin);
 
 	-- Declare two signals named "head_state" and "next_state" to be of enumerated type
 	SIGNAL head_state: state_type;
 	SIGNAL next_state: state_type;
 	
 BEGIN
-	PROCESS (next_cycle)
+	PROCESS (clk, next_cycle)
 	begin
-		if rising_edge(next_cycle) then
-			head_state <= next_state;
+		if rising_edge(clk) then
+			if next_cycle = '1' then
+				head_state <= next_state;
+			else
+				head_state <= head_state;
+			end if;
 		end if;
 	END PROCESS;
 
@@ -43,8 +48,10 @@ BEGIN
 				WHEN spin3 =>
 					next_state <= spin4;
 				WHEN spin4 =>
-					next_state <= spin1;
+					next_state <= done_spin;
+				WHEN done_spin =>
 					done <= '1';
+					next_state <= done_spin;
 				WHEN OTHERS =>
 					next_state <= spin1;
 			END CASE;

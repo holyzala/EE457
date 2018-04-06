@@ -67,9 +67,10 @@ begin
 
 		wait for 500*clk_cycle;
 
-		key <= "1101"; -- no reset
 		sw <= "0000000010"; -- EW-LT- Active
 		
+		wait for clk_cycle;
+		key <= "1101"; -- no reset
 		wait for clk_cycle;
 		
 		key <= "1111";

@@ -15,12 +15,16 @@ add wave -noupdate -divider {Switches}
 add wave -noupdate /de1_top_tb/dut/sw(0)
 add wave -noupdate /de1_top_tb/dut/sw(1)
 
-add wave -noupdate -divider {Snake Control}
+add wave -noupdate -divider {Washing Control}
 add wave -noupdate /de1_top_tb/dut/u4/current_state
 add wave -noupdate /de1_top_tb/dut/u4/next_state
 add wave -noupdate /de1_top_tb/dut/u4/donesig
 add wave -noupdate /de1_top_tb/dut/u4/donesig2
 add wave -noupdate /de1_top_tb/dut/u4/donesig3
+
+add wave -noupdate -divider {Fill Control}
+add wave -noupdate /de1_top_tb/dut/u5/head_state
+add wave -noupdate /de1_top_tb/dut/u5/next_state
 
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {20940 ns} 0}
