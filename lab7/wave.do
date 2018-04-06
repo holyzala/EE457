@@ -21,10 +21,25 @@ add wave -noupdate /de1_top_tb/dut/u4/next_state
 add wave -noupdate /de1_top_tb/dut/u4/donesig
 add wave -noupdate /de1_top_tb/dut/u4/donesig2
 add wave -noupdate /de1_top_tb/dut/u4/donesig3
+add wave -noupdate /de1_top_tb/dut/u4/start
+add wave -noupdate /de1_top_tb/dut/u4/stop
+add wave -noupdate /de1_top_tb/dut/u4/started
 
 add wave -noupdate -divider {Fill Control}
 add wave -noupdate /de1_top_tb/dut/u5/head_state
 add wave -noupdate /de1_top_tb/dut/u5/next_state
+add wave -noupdate /de1_top_tb/dut/u5/next_cycle
+
+add wave -noupdate -divider {Wash Control}
+add wave -noupdate /de1_top_tb/dut/u7/head_state
+add wave -noupdate /de1_top_tb/dut/u7/next_state
+add wave -noupdate /de1_top_tb/dut/u7/next_cycle
+add wave -noupdate /de1_top_tb/dut/u7/second_stage
+
+add wave -noupdate -divider {Spin Control}
+add wave -noupdate /de1_top_tb/dut/u6/head_state
+add wave -noupdate /de1_top_tb/dut/u6/next_state
+add wave -noupdate /de1_top_tb/dut/u6/next_cycle
 
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {20940 ns} 0}

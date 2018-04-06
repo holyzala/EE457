@@ -28,21 +28,22 @@ END ENTITY washing_controller;
 ARCHITECTURE Logic of washing_Controller IS
 
 	TYPE state_type IS (idle, fill, wash, spin, drain, drain1, rinse, fill2);
-	
-	
+
 	SIGNAL current_state: state_type;
 	SIGNAL next_state: state_type;
+	SIGNAL started : STD_LOGIC;
 
-BEGIN	
-
-	Process (current_state, clk, stop, start, donesig, donesig2, donesig3)
-	
+BEGIN
+	PROCESS (clk, stop, start)
 		VARIABLE done_flg : STD_LOGIC;
-	
 	BEGIN
-		done_flg := start or donesig or donesig2 or donesig3;
-	
-		if stop = '1' THEN
+		done_flg := donesig or donesig2 or donesig3;
+		IF start = '1' THEN
+			IF started = '0' THEN
+				done_flg := '1';
+			END IF;
+		END IF;
+		IF stop = '1' THEN
 			if current_state = idle then
 				current_state <= idle;
 			else
@@ -57,7 +58,7 @@ BEGIN
 			end if;
 		end if;
 	END Process;
-	
+
 	
 	outer_state: Process (sw0, sw1, current_state)
 		 
@@ -65,10 +66,11 @@ BEGIN
 		
 	BEGIN
 		switches := sw1 & sw0;
-		
+		started <= '1';
 		if switches = "01" then
 			CASE current_state IS
 				WHEN idle =>
+					started <= '0';
 					next_state <= fill;
 				WHEN fill =>
 					next_state <= wash;
@@ -85,12 +87,14 @@ BEGIN
 				WHEN drain =>
 					next_state <= idle;
 				WHEN OTHERS =>
+					started <= '0';
 					next_state <= idle;
 			END CASE;
 			
 		elsif switches = "10" then
 			CASE current_state IS
 				WHEN idle =>
+					started <= '0';
 					next_state <= fill;
 				WHEN fill =>
 					next_state <= wash;
@@ -101,10 +105,12 @@ BEGIN
 				WHEN drain =>
 					next_state <= idle;
 				WHEN OTHERS =>
+					started <= '0';
 					next_state <= idle;			
 			END CASE;
 		
 		else
+			started <= '0';
 			next_state <= idle;
 		end if;
 		

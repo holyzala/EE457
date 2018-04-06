@@ -64,10 +64,10 @@ BEGIN
 				CASE head_state IS
 					WHEN wash1 =>
 						next_state <= done_wash;
-						second_stage <= '0';
 					WHEN done_wash =>
-						next_state <= done_wash;
 						done <= '1';
+						second_stage <= '0';
+						next_state <= done_wash;
 					WHEN wash2 =>
 						next_state <= wash1;
 					WHEN wash3 =>
