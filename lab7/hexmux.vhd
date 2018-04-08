@@ -11,6 +11,7 @@ END ENTITY hexmux;
 
 ARCHITECTURE LogicFunction OF hexmux IS
 
+-- Return a 3-bit vector for iof we're in wash, or fill state
 BEGIN
 	process (hex_a, hex_b, state_sel) is
 	begin

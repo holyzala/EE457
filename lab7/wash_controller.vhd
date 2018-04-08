@@ -6,7 +6,7 @@ USE IEEE.NUMERIC_STD.ALL;
 ENTITY wash_controller IS
 	-- Begin port declaration
 	PORT (
-		-- Declare control inputs 
+		-- Declare control inputs
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0);
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0);
 		done : OUT STD_LOGIC;
@@ -15,7 +15,7 @@ ENTITY wash_controller IS
 	);
 END ENTITY wash_controller;
 
---  Begin architecture 
+--  Begin architecture
 ARCHITECTURE logic OF wash_controller IS
 
 	TYPE state_type IS (wash1, wash2, wash3, wash4, done_wash);
@@ -25,6 +25,7 @@ ARCHITECTURE logic OF wash_controller IS
 	SIGNAL next_state: state_type;
 	SIGNAL second_stage: STD_LOGIC;
 
+-- Check if it's valid to move to the next state
 BEGIN
 	PROCESS (clk, next_cycle)
 	begin
@@ -85,6 +86,7 @@ BEGIN
 	-- End process
 	END PROCESS;
 
+  -- Determine the hex of the light to light up
 	process (head_state)
 	begin
 		CASE head_state IS

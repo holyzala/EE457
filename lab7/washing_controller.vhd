@@ -13,10 +13,10 @@ ENTITY washing_controller IS
 		donesig : IN STD_LOGIC;
 		donesig2 : IN STD_LOGIC;
 		donesig3 : IN STD_LOGIC;
-		
+
 		-- key 0
 		stop : IN STD_LOGIC;
-		
+
 		-- output bit vector representing the states
 		state_out : OUT STD_LOGIC_VECTOR (2 downto 0);
 		reset_out : OUT STD_LOGIC
@@ -69,11 +69,12 @@ BEGIN
 		end if;
 	END Process;
 
-	
+
 	outer_state: Process (sw0, sw1, current_state)
-		 
+
 		VARIABLE switches :STD_LOGIC_VECTOR(1 downto 0);
-		
+
+	-- Determine the next state based on the current state and enables switches
 	BEGIN
 		switches := sw1 & sw0;
 		-- default is assume we are running, set to 0 when we aren't
@@ -88,7 +89,7 @@ BEGIN
 					next_state <= wash;
 				WHEN wash =>
 					next_state <= drain1;
-				WHEN drain1 => 
+				WHEN drain1 =>
 					next_state <= fill2;
 				WHEN fill2 =>
 					next_state <= rinse;
@@ -102,7 +103,7 @@ BEGIN
 					running <= '0';
 					next_state <= idle;
 			END CASE;
-			
+
 		elsif switches = "10" then
 			CASE current_state IS
 				WHEN idle =>
@@ -118,19 +119,20 @@ BEGIN
 					next_state <= idle;
 				WHEN OTHERS =>
 					running <= '0';
-					next_state <= idle;			
+					next_state <= idle;
 			END CASE;
 		-- any other switch state means it's not a valid input
 		else
 			running <= '0';
 			next_state <= idle;
 		end if;
-		
+
 	END Process;
-	
+
+	-- Determine which 3-bit vector to send to the inner state-machine based on the current state
 	Process (current_state)
 	Begin
-		-- use a 3 bit vector to represent states to pass them to the inner state machines
+
 		CASE current_state IS
 			WHEN idle =>
 				state_out <= "000";
@@ -152,5 +154,5 @@ BEGIN
 				state_out <= "000";
 		END CASE;
 	END PROCESS;
-	
+
 END Logic;

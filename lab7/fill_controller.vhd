@@ -6,7 +6,7 @@ USE IEEE.NUMERIC_STD.ALL;
 ENTITY fill_controller IS
 	-- Begin port declaration
 	PORT (
-		-- Declare control inputs 
+		-- Declare control inputs
 		state_in : IN STD_LOGIC_VECTOR (2 downto 0); -- Master state
 		hex_out : OUT STD_LOGIC_VECTOR (6 downto 0); -- Light sequence
 		done : OUT STD_LOGIC; -- If this mini state is complete
@@ -15,7 +15,7 @@ ENTITY fill_controller IS
 	);
 END ENTITY fill_controller;
 
---  Begin architecture 
+--  Begin architecture
 ARCHITECTURE logic OF fill_controller IS
 	-- fill1 is empty, fill2 is half full, fill3 is full
 	TYPE state_type IS (empty, half, full, done_fill, done_drain);
@@ -23,7 +23,7 @@ ARCHITECTURE logic OF fill_controller IS
 	-- Declare two signals named "head_state" and "next_state" to be of enumerated type
 	SIGNAL head_state: state_type;
 	SIGNAL next_state: state_type;
-	
+
 BEGIN
 	-- This is the actual moving of the state, tied to the counter
 	PROCESS (clk, next_cycle)
@@ -83,7 +83,7 @@ BEGIN
 	-- End process
 	END PROCESS;
 
-	-- The 7 segment control for fill rate
+	-- Determine the hex of the light for the fill cycle
 	process (head_state)
 	begin
 		CASE head_state IS
