@@ -133,8 +133,8 @@ architecture struct of DE1_top is
 	SIGNAL wash_done : STD_LOGIC;
 	SIGNAL hex_out_b : std_logic_vector (6 downto 0);
 	SIGNAL hex_out_a : std_logic_vector (6 downto 0);
-	--CONSTANT timer : integer := 20;
-	CONSTANT timer : integer := 50000000;
+	CONSTANT timer : integer := 20;
+	--CONSTANT timer : integer := 50000000;
 	SIGNAL count_reset : STD_LOGIC;
 
 BEGIN

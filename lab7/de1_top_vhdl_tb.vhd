@@ -75,22 +75,20 @@ begin
 		
 		key <= "1111";
 
-		wait for 500*clk_cycle;
+		wait for 300*clk_cycle;
+		sw <= "0000000001"; -- EW-LT- Active
 
-		key <= "1111"; -- no reset
-		sw <= "0000000010"; -- NS-LT-Active
-
+		wait for clk_cycle;
+		key <= "1101"; -- no reset
+		wait for clk_cycle;
+		
+		key <= "1111";
 		wait for 200*clk_cycle;
+        key <= "1110";
+        wait for clk_cycle;
+		key <= "1111";
 
-		key <= "1111";   -- no reset
-		sw <= "1000000100";  -- NM-Active
-
-		wait for 200*clk_cycle;
-
-		key <= "1110";   --  reset
-		sw <= "0000000000";  
-
-		wait for 100*clk_cycle;
+        wait for 100*clk_cycle;
 	end process;
 
 		
