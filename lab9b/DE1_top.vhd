@@ -77,22 +77,26 @@ architecture struct of DE1_top is
 		);
 	END COMPONENT gen_counter;
 
-	signal data_input : STD_LOGIC_VECTOR(3 downto 0);
+	signal ram_data : STD_LOGIC_VECTOR(3 downto 0);
 	signal a1 : STD_LOGIC_VECTOR(4 downto 0);
 	signal d1 : STD_LOGIC_VECTOR(3 downto 0);
 	signal second_up : STD_LOGIC;
 	signal read_address : STD_LOGIC_VECTOR(4 downto 0);
 	signal key0_n : STD_LOGIC;
+	signal top_read : STD_LOGIC_VECTOR(3 downto 0);
+	signal top_write : STD_LOGIC_VECTOR(3 downto 0);
 	
 begin
 	a1 <= SW(8 downto 4);
 	d1 <= SW(3 downto 0);
 	key0_n <= not KEY(0);
+	top_read <= "000" & read_address(4);
+	top_write <= "000" & a1(4);
 	
 -- processes, component instantiations, general logic.
 	one_second : gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
-		generic map (wide => 26, max => 50000000)
+		generic map (wide => 26, max => 5)
 		PORT MAP (
 			clk => clock_50,
 			-- We never load it
@@ -123,47 +127,47 @@ begin
 		
 	u1 : ram32x4
 	port map (
-				rdaddress => read_address,
-				wraddress => a1,
-				data => d1,
-				wren => SW(9),
-				clock => clock_50,
-				q => data_input);
+		rdaddress => read_address,
+		wraddress => a1,
+		data => d1,
+		wren => SW(9),
+		clock => clock_50,
+		q => ram_data);
 				
 	s0 : seven_segment_cntrl
 	port map(
-			seg_a => HEX0,
-			input => data_input
+		seg_a => HEX0,
+		input => ram_data
 	);
 	
 	s5 : seven_segment_cntrl
 	port map(
-			seg_a => HEX5,
-			input => "000" & a1(4)
+		seg_a => HEX5,
+		input => top_write
 	);
 	
 	s4 : seven_segment_cntrl
 	port map(
-			seg_a => HEX4,
-			input => a1(3 downto 0)
+		seg_a => HEX4,
+		input => a1(3 downto 0)
 	);
 	
 	s1 : seven_segment_cntrl
 	port map(
-			seg_a => HEX1,
-			input => d1
+		seg_a => HEX1,
+		input => d1
 	);
 	
 	s2 : seven_segment_cntrl
 	port map(
-			seg_a => HEX2,
-			input => read_address(3 downto 0)
+		seg_a => HEX2,
+		input => read_address(3 downto 0)
 	);
 
 	s3 : seven_segment_cntrl
 	port map(
-			seg_a => HEX3,
-			input => "000" & read_address(4)
+		seg_a => HEX3,
+		input => top_read
 	);
 	end;
 
