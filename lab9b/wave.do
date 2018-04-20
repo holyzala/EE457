@@ -15,16 +15,8 @@ add wave -noupdate -divider {Reset Key}
 add wave -noupdate /de1_top_tb/dut/key(0)
 
 add wave -noupdate -divider {Switches}
-add wave -noupdate /de1_top_tb/dut/sw(0)
-add wave -noupdate /de1_top_tb/dut/sw(1)
-add wave -noupdate /de1_top_tb/dut/sw(2)
-add wave -noupdate /de1_top_tb/dut/sw(3)
-add wave -noupdate /de1_top_tb/dut/sw(4)
-add wave -noupdate /de1_top_tb/dut/sw(5)
-add wave -noupdate /de1_top_tb/dut/sw(6)
-add wave -noupdate /de1_top_tb/dut/sw(7)
-add wave -noupdate /de1_top_tb/dut/sw(8)
-add wave -noupdate /de1_top_tb/dut/sw(9)
+add wave -noupdate /de1_top_tb/dut/sw
+add wave -noupdate /de1_top_tb/dut/switches
 
 add wave -noupdate -divider {Ram}
 add wave -noupdate /de1_top_tb/dut/ram_data

@@ -21,6 +21,7 @@ vcom de1_top.vhd
 vcom counter.vhd
 vcom ram32x4.vhd
 vcom seven_segment_cntrl.vhd
+vcom switch_double_dff.vhd
 # Add any additional files here 
 vcom de1_top_vhdl_tb.vhd 
 vsim -t ns work.de1_top_tb

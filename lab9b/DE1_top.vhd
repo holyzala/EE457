@@ -77,6 +77,16 @@ architecture struct of DE1_top is
 		);
 	END COMPONENT gen_counter;
 
+	COMPONENT switch_double_dff IS
+		PORT (
+			input : IN STD_LOGIC_VECTOR (9 downto 0);
+			clock : IN STD_LOGIC;
+			reset : IN STD_LOGIC;
+			output : OUT STD_LOGIC_VECTOR(9 downto 0)
+		);
+			
+	END COMPONENT switch_double_dff;
+
 	signal ram_data : STD_LOGIC_VECTOR(3 downto 0);
 	signal a1 : STD_LOGIC_VECTOR(4 downto 0);
 	signal d1 : STD_LOGIC_VECTOR(3 downto 0);
@@ -85,15 +95,24 @@ architecture struct of DE1_top is
 	signal key0_n : STD_LOGIC;
 	signal top_read : STD_LOGIC_VECTOR(3 downto 0);
 	signal top_write : STD_LOGIC_VECTOR(3 downto 0);
+	signal switches : STD_LOGIC_VECTOR(9 downto 0);
 	
 begin
-	a1 <= SW(8 downto 4);
-	d1 <= SW(3 downto 0);
+	a1 <= switches(8 downto 4);
+	d1 <= switches(3 downto 0);
 	key0_n <= not KEY(0);
 	top_read <= "000" & read_address(4);
 	top_write <= "000" & a1(4);
 	
 -- processes, component instantiations, general logic.
+	sw_dff : switch_double_dff
+		PORT MAP (
+			input => SW,
+			clock => clock_50,
+			reset => KEY(0),
+			output => switches
+		);
+
 	one_second : gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
 		generic map (wide => 26, max => 5)
@@ -126,55 +145,48 @@ begin
 		);
 		
 	u1 : ram32x4
-	port map (
-		rdaddress => read_address,
-		wraddress => a1,
-		data => d1,
-		wren => SW(9),
-		clock => clock_50,
-		q => ram_data);
+		port map (
+			rdaddress => read_address,
+			wraddress => a1,
+			data => d1,
+			wren => switches(9),
+			clock => clock_50,
+			q => ram_data
+	);
 				
 	s0 : seven_segment_cntrl
-	port map(
-		seg_a => HEX0,
-		input => ram_data
+		port map(
+			seg_a => HEX0,
+			input => ram_data
 	);
 	
 	s5 : seven_segment_cntrl
-	port map(
-		seg_a => HEX5,
-		input => top_write
+		port map(
+			seg_a => HEX5,
+			input => top_write
 	);
 	
 	s4 : seven_segment_cntrl
-	port map(
-		seg_a => HEX4,
-		input => a1(3 downto 0)
+		port map(
+			seg_a => HEX4,
+			input => a1(3 downto 0)
 	);
 	
 	s1 : seven_segment_cntrl
-	port map(
-		seg_a => HEX1,
-		input => d1
+		port map(
+			seg_a => HEX1,
+			input => d1
 	);
 	
 	s2 : seven_segment_cntrl
-	port map(
-		seg_a => HEX2,
-		input => read_address(3 downto 0)
+		port map(
+			seg_a => HEX2,
+			input => read_address(3 downto 0)
 	);
 
 	s3 : seven_segment_cntrl
-	port map(
-		seg_a => HEX3,
-		input => top_read
+		port map(
+			seg_a => HEX3,
+			input => top_read
 	);
-	end;
-
-
-
-
-
-
-
-
+end;
