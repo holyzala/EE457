@@ -11,9 +11,12 @@ ENTITY switch_double_dff IS
 			
 END switch_double_dff;
 
+-- Double D Flip Flop
 ARCHITECTURE LogicFunction OF switch_double_dff IS
+	-- Output from the first D Flip Flop
 	signal first_out : STD_LOGIC_VECTOR (9 downto 0);
 BEGIN
+	-- First D Flip Flop
 	process (input, clock, reset) is
 	begin
 		if reset = '0' then
@@ -23,6 +26,7 @@ BEGIN
 		end if;
 	end process;
 	
+	-- Second D Flip Flop
 	process (first_out, clock, reset) is
 	begin
 		if reset = '0' then

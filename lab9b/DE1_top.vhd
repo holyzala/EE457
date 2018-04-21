@@ -55,11 +55,13 @@ architecture struct of DE1_top is
 		);
 	END component ram32x4;
 
+	-- Convert a binary number and convert it to a hexadecimal display
 	component seven_segment_cntrl IS
 		PORT (input : IN STD_LOGIC_VECTOR (3 downto 0);
 				seg_a : OUT STD_LOGIC_VECTOR(6 downto 0));
 	END component seven_segment_cntrl;
 
+	-- Generic counter
 	COMPONENT gen_counter
 		generic (
 			wide : positive; -- how many bits is the counter
@@ -77,6 +79,7 @@ architecture struct of DE1_top is
 		);
 	END COMPONENT gen_counter;
 
+	-- Double D Flip Flop to hide the switches behind to prevent metastability
 	COMPONENT switch_double_dff IS
 		PORT (
 			input : IN STD_LOGIC_VECTOR (9 downto 0);
@@ -87,14 +90,23 @@ architecture struct of DE1_top is
 			
 	END COMPONENT switch_double_dff;
 
+	-- The q value from the ram megafunction
 	signal ram_data : STD_LOGIC_VECTOR(3 downto 0);
+	-- The write address controlled by switches
 	signal a1 : STD_LOGIC_VECTOR(4 downto 0);
+	-- The data to write, also controlled by switches
 	signal d1 : STD_LOGIC_VECTOR(3 downto 0);
+	-- Goes high when a second has passed
 	signal second_up : STD_LOGIC;
+	-- The address to read from the memory, cycles with a counter
 	signal read_address : STD_LOGIC_VECTOR(4 downto 0);
+	-- Inverse of the reset key
 	signal key0_n : STD_LOGIC;
+	-- The leftmost digit of the read address
 	signal top_read : STD_LOGIC_VECTOR(3 downto 0);
+	-- The leftmost digit of the write address
 	signal top_write : STD_LOGIC_VECTOR(3 downto 0);
+	-- Output of the switches after returning from D Flip Flops
 	signal switches : STD_LOGIC_VECTOR(9 downto 0);
 	
 begin
@@ -105,6 +117,7 @@ begin
 	top_write <= "000" & a1(4);
 	
 -- processes, component instantiations, general logic.
+	-- Double D Flip Flop for the 10 board switches
 	sw_dff : switch_double_dff
 		PORT MAP (
 			input => SW,
@@ -113,8 +126,10 @@ begin
 			output => switches
 		);
 
+	-- Counts to one second (50,000,000 max, much lower for simulation)
 	one_second : gen_counter
 		-- 26 bits wide and 50,000,000 max for 1 second
+--		generic map (wide => 26, max => 50000000)
 		generic map (wide => 26, max => 5)
 		PORT MAP (
 			clk => clock_50,
@@ -129,8 +144,8 @@ begin
 			term => second_up
 		);
 		
+	-- Second counter that counts from 0 to 31 for the read addresses
 	read_count : gen_counter
-		-- 26 bits wide and 50,000,000 max for 1 second
 		generic map (wide => 5, max => 31)
 		PORT MAP (
 			clk => second_up,
@@ -144,6 +159,7 @@ begin
 			count => read_address
 		);
 		
+	-- The ram megafunction
 	u1 : ram32x4
 		port map (
 			rdaddress => read_address,
@@ -153,40 +169,46 @@ begin
 			clock => clock_50,
 			q => ram_data
 	);
-				
+	
+	-- Rightmost display for the read data
 	s0 : seven_segment_cntrl
 		port map(
 			seg_a => HEX0,
 			input => ram_data
 	);
 	
-	s5 : seven_segment_cntrl
-		port map(
-			seg_a => HEX5,
-			input => top_write
-	);
-	
-	s4 : seven_segment_cntrl
-		port map(
-			seg_a => HEX4,
-			input => a1(3 downto 0)
-	);
-	
+	-- Data to be written
 	s1 : seven_segment_cntrl
 		port map(
 			seg_a => HEX1,
 			input => d1
 	);
 	
+	-- Right digit of the read address
 	s2 : seven_segment_cntrl
 		port map(
 			seg_a => HEX2,
 			input => read_address(3 downto 0)
 	);
-
+	
+	-- Left digit of the read address
 	s3 : seven_segment_cntrl
 		port map(
 			seg_a => HEX3,
 			input => top_read
+	);
+	
+	-- Right digit of the write address
+	s4 : seven_segment_cntrl
+		port map(
+			seg_a => HEX4,
+			input => a1(3 downto 0)
+	);
+
+	-- Leftmost display for the left digit of the write address
+	s5 : seven_segment_cntrl
+		port map(
+			seg_a => HEX5,
+			input => top_write
 	);
 end;
