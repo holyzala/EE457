@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file path="clockb_pll_sim/clockb_pll.vho" type="VHDL" />
+ <topLevel name="clockb_pll" />
+ <deviceFamily name="cyclonev" />
+</simPackage>
