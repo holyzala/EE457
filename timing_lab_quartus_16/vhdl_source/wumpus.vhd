@@ -49,22 +49,22 @@ end process;
 f1: frazzle 
 port map(
   din  => stage1,
-  dout => stage2);
+  dout => stage2); --reg me
 
 f2: frazzle 
 port map ( 
   din  => stage2,
-  dout => stage3);
+  dout => stage3); --reg me
 
 f3: frazzle 
 port map (
   din  => stage3,
-  dout => stage4);
+  dout => stage4); --reg me
 
 f4: frazzle 
 port map (
   din  => stage4,
-  dout => stage5);
+  dout => stage5); --reg me
 
 f5: frazzle 
 port map(
